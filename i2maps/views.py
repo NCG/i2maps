@@ -35,7 +35,7 @@ def call(request):
         raise Exception("No matching method availble. You asked for %s with these parameters %s!"%(method, parameters))
     if isinstance(results, str):
         response = results
-    elif results.has_key('response'):
+    elif isinstance(results, dict) and results.has_key('response'):
         response = results['response']
     else:
         response = i2maps.output.to_json(results)
