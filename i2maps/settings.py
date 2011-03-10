@@ -14,10 +14,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 DATABASE_ENGINE = 'sqlite3'  
-
-
-HTTP_PROXY = ""
-#HTTP_PROXY = "http://proxy3.nuim.ie:3128"
+DATABASE_NAME = I2MAPS_WORKING_DIRECTORY + 'i2maps.db'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -67,10 +64,20 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    # 'django.contrib.admin',
     'i2maps',
 )
-os.environ["http_proxy"] = HTTP_PROXY
-os.environ["MPLCONFIGDIR"] = PROJECT_PATH + "tmp/"
+try:
+    import sentry
+    INSTALLED_APPS += (
+    'indexer',
+    'paging',
+    'sentry',
+    'sentry.client')
+except:
+    pass
+

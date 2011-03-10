@@ -1,12 +1,9 @@
 
 // Load the example1 data source into a JavaScript object.
-// This will create a global variable 'Example1'.
-i2maps.datasources.get("Example2");
-
-
+i2maps.datasources.load("Example2");
 
 i2maps.setupProject( function() {
-
+Example2 = i2maps.datasources.get("Example2");
 	var context = {
 		label: function(feature) {
 			if (feature.attributes.label != undefined && feature.attributes.label > -99) {

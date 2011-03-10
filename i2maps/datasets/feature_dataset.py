@@ -13,9 +13,10 @@ try:
 	import shapely.wkb
 	import shapely.wkt
 except:
-	print "Shapely package is not installed."
-	print "You will not be able to import or modify geometries."
-	print "More about Shapely: http://trac.gispython.org/lab/wiki/Shapely"
+    # print "Shapely package is not installed."
+    # print "You will not be able to import or modify geometries."
+    # print "More about Shapely: http://trac.gispython.org/lab/wiki/Shapely"
+    pass
 
 import json
 

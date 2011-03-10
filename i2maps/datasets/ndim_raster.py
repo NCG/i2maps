@@ -66,7 +66,10 @@ class NDimRaster():
             fp.write(json.dumps(self.ref))
             fp.close()
         
-        
+    
+    def save(self):
+        json.dump(self.ref, open(self.ref_path, 'w'))
+    
     def __del__(self):
         del(self.data)
         
@@ -173,10 +176,12 @@ class NDimRaster():
         Converts pixel coordinates to geographic space coordinates.
         Returns the coordinate at the centre of the pixel.
         """
+        resolution = self.resolution[:]
+        envelope = self.envelope[:]
         geo = []
         for i in range(0, min(self.ndims, len(px))):
-            geo.append(((float(px[i]) + 0.5) * self.resolution[i]) + 
-                self.envelope[i][0]
+            geo.append(((float(px[i]) + 0.5) * resolution[i]) + 
+                envelope[i][0]
             )
         return tuple(geo)
         
@@ -185,10 +190,12 @@ class NDimRaster():
         """
         Converts real-world coordinates to pixel coordinates.
         """
+        resolution = self.resolution[:]
+        envelope = self.envelope[:]
         px = []
         for i in range(0, min(self.ndims, len(geo))):
-            px.append(int(np.floor((geo[i] - self.envelope[i][0]) / 
-                self.resolution[i]))
+            px.append(int(np.floor((geo[i] - envelope[i][0]) / 
+                resolution[i]))
             )
         return tuple(px)
         

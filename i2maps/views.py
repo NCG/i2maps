@@ -14,9 +14,29 @@ import i2maps.settings as settings
 def index(request):
     return render_to_response('index.html')
 
-
+# allowing use of i2maps/query/ and i2maps.doQuery() (JS) for backwards compatibility
 def query(request):
-    raise Exception("i2maps/query/ and i2maps.doQuery() are no longer supported!! Please use datasource proxy objects instead.")
+    query = request.GET.get('query', '')
+    parameters = json.loads(request.GET.get('parameters', '[]'))
+    parameters = dict([(k.encode(), parameters[k]) for k in parameters])
+    callback = request.GET.get('callback', '')
+    data_source = request.GET.get('data_source', '')
+    if data_source.startswith('{') and data_source.endswith('}'): # data source defined in request
+        data_source_config = json.loads(data_source)
+        datasource = i2maps.datasources.new(data_source_config)
+    else: # data source referred to by name
+        datasource = i2maps.datasources.get(data_source)
+    if getattr(datasource, 'feature_query', None):
+        results = datasource.feature_query(query, parameters)
+    else:
+        results = getattr(datasource, query)(**parameters)
+    response = i2maps.output.to_json(results)
+    if callback != "":
+        response = callback + '(' + response + ')'
+    return HttpResponse(response)
+    
+# def query(request):
+#     raise Exception("i2maps/query/ and i2maps.doQuery() are no longer supported!! Please use datasource proxy objects instead.")
 
 def call(request):
     method = request.GET.get('method', '')
@@ -35,7 +55,7 @@ def call(request):
         raise Exception("No matching method availble. You asked for %s with these parameters %s!"%(method, parameters))
     if isinstance(results, str):
         response = results
-    elif results.has_key('response'):
+    elif isinstance(results, dict) and results.has_key('response'):
         response = results['response']
     else:
         response = i2maps.output.to_json(results)
@@ -51,8 +71,8 @@ def datasource(request):
         raise Exception("No matching datasource class availble. You asked for %s!"%(data_source))
     if not isinstance(datasource, i2maps.datasources.Custom):
         raise Exception("You are not permitted to access the datasource you requested. You asked for %s!"%(data_source))
-    response = datasource._as_js_proxy_object()
-    return HttpResponse(response)
+    response = "i2maps.datasources['%s'] = %s"%(data_source, datasource._as_js_proxy_object())
+    return HttpResponse(response, content_type="text/javascript")
     
 def complex_vector(request, operation):
     callback = request.REQUEST.get('callback', '')
@@ -73,6 +93,8 @@ def complex_vector(request, operation):
         response = callback + '(' + response + ')'
     return HttpResponse(response)
 
+
+
 def error500(request, template_name='500.html'):
     """
     500 error handler.
@@ -81,18 +103,24 @@ def error500(request, template_name='500.html'):
     Context: None
     """
     import django.views.debug
-    import tempfile
-    path = tempfile.gettempdir() + '/'
-    filename = 'error_' + str(int(time.mktime(datetime.datetime.now().timetuple()))) + '.html'
     exc_type, exc_value, tb = sys.exc_info()
     reporter = django.views.debug.ExceptionReporter(request, exc_type, exc_value, tb)
     debug_html = reporter.get_traceback_html()
-    f = open(path + filename, 'w')
-    f.write(debug_html)
-    f.close()
-    if not settings.DEVELOPMENT: filename = None
+    filename = settings.I2MAPS_PATH + 'errors.db'
+    try:
+        db = i2maps.datasources.new({"type": "sqlite", "database": filename})
+        if not db.has_table('errors'):
+            db.query("create table errors (id INTEGER, time TEXT, request TEXT, exception TEXT, traceback_html TEXT)")
+        else:
+            t = datetime.datetime.now()
+            id = int(time.mktime(t.timetuple()))
+            params = (id, str(t)[0:-7], str(request.path), str(exc_value), str(debug_html))
+            db.query("insert into errors values (?, ?, ?, ?, ?)", params)
+    except Exception, e:
+        return HttpResponse(str(e) + ' ' + filename)
+    if not settings.DEVELOPMENT: id = None
     t = loader.get_template(template_name) # You need to create a 500.html template.
-    html = t.render(RequestContext(request, {'error_file': filename, 'exception': exc_value}))
+    html = t.render(RequestContext(request, {'error_file': id, 'exception': exc_value}))
     return HttpResponseServerError(html)
     
 def error404(request, template_name='404.html'):
@@ -111,4 +139,37 @@ def error404(request, template_name='404.html'):
         path = path.split('projects/')[1] + 'index.html'
         return django.views.static.serve(request, path, document_root=settings.I2MAPS_PATH + 'views')
     t = loader.get_template(template_name) # You need to create a 404.html template.
-    return HttpResponse(t.render(RequestContext(request, {'request_path': request.path})))   
+    return HttpResponse(t.render(RequestContext(request, {'request_path': request.path})))
+
+def errors(request, key=None):
+    db = i2maps.datasources.new({"type": "sqlite", "database": settings.I2MAPS_PATH + 'errors.db'})
+    if key:
+        response = db.query('select traceback_html from errors where id = %s'%key)[0][0]
+        return HttpResponse(response)
+    else:
+        errors = db.query('select * from errors order by id desc')
+        t = loader.get_template('errors.html') # You need to create a 404.html template.
+        return HttpResponse(t.render(RequestContext(request, {'errors': errors}))) 
+
+# def errors(request, key=None):
+#     import shelve
+#     d = shelve.open(settings.I2MAPS_PATH + 'errors.db')
+#     if key:
+#         response = d[str(key)]['traceback_html']
+#         d.close()
+#         return HttpResponse(response)
+#     else:
+#         keys = ['time', 'request_path', 'exception']
+#         errors = map(lambda e: [e] + map(lambda k: d.get(e).get(k), keys), d)
+#         d.close()
+#         t = loader.get_template('errors.html') # You need to create a 404.html template.
+#         return HttpResponse(t.render(RequestContext(request, {'errors': errors}))) 
+
+# def errors(request):
+#     import tempfile
+#     dir = tempfile.gettempdir()
+#     filenames = filter(lambda f: f.startswith('error_'), os.listdir(dir))
+#     filenames.sort(reverse=True)
+#     dates = map(lambda f: datetime.datetime.fromtimestamp(float(f.split('.')[0].split('_')[1])).__str__(), filenames)
+#     t = loader.get_template('errors.html') # You need to create a 404.html template.
+#     return HttpResponse(t.render(RequestContext(request, {'filenames': zip(filenames, dates)}))) 

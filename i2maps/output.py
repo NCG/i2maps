@@ -7,8 +7,11 @@ def printDecimal(d):
     return '|' + s + '|'
 
 def to_json(results, callback=''):
-    s = json.dumps(results, default=printDecimal)
-    s = s.replace('"|', '').replace('|"', '')
+    if hasattr(results, 'json'):
+        s = results.json
+    else:
+        s = json.dumps(results, default=printDecimal)
+        s = s.replace('"|', '').replace('|"', '')
     if callback != "":
         s = callback + '(' + s + ')'
     return s

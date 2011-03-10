@@ -26,9 +26,13 @@ def get(data_source):
         if not sys.path.__contains__(path):
             sys.path.insert(0, path)
         m = __import__(module)
-        datasource = eval('m.' + module.capitalize())
+        m = reload(m)
+        datasource = getattr(m, module.capitalize())
         return datasource()
 
 
 def fail(config):
     raise Exception, "No datasource connectors available of type " + config['type']
+
+def never_cache(f):
+    return f

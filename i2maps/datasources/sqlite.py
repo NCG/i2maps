@@ -81,10 +81,12 @@ class Sqlite():
         cur.close()
         return result
     
-    def query(self, query):
+    def query(self, query, params=()):
+        # self.connection.row_factory = sqlite.Row
         cur = self.connection.cursor()
-        cur.execute(query)
+        cur.execute(query, params)
         rows = cur.fetchall()
+        self.connection.commit()
         return rows
         
     def has_table(self, table):

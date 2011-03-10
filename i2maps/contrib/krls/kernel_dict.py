@@ -30,7 +30,7 @@ class KernelDict():
                           
           # intrinsic regularization (ridge term coefficient) 
           # also helps in case of numerical instabilities
-          self.gamma = 0.1
+          self.gamma = 0.001
           
           # kernel parameter, such as gaussian bandwidth
           #self.kparam = kparam
