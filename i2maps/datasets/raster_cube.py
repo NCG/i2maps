@@ -44,12 +44,15 @@ class RasterCube():
         return idx
         
     def surface(self, time):
-        idx = self.spatial_array.ref['times'].get(time, -1)
+        times = np.array(sorted(self.spatial_array.ref['times'].keys()))
+        time_key = times[times.searchsorted(time) - 1]
+        idx = self.spatial_array.ref['times'][time_key]
         if idx > -1:
+            self.spatial_array.ref['properties'] = {'time': time_key}
             surface = self.spatial_array[:,:,idx]
             return surface
         else:
-            raise Exception("No surface stored for time %s"%time)
+            return {}
     
     def remove(self, time):
         self.spatial_array.ref['times'].pop(time)

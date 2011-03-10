@@ -39,10 +39,11 @@ def query(request):
 #     raise Exception("i2maps/query/ and i2maps.doQuery() are no longer supported!! Please use datasource proxy objects instead.")
 
 def call(request):
-    method = request.GET.get('method', '')
-    parameters = json.loads(request.GET.get('parameters', '[]'))
-    callback = request.GET.get('callback', '')
-    data_source = request.GET.get('data_source', '')
+   # using request.REQUEST instead of request.GET to allow parameters to be sent by POST either
+    method = request.REQUEST.get('method', '')
+    parameters = json.loads(request.REQUEST.get('parameters', '[]'))
+    callback = request.REQUEST.get('callback', '')
+    data_source = request.REQUEST.get('data_source', '')
     try:
         datasource = i2maps.datasources.get(data_source)
     except ImportError, e:

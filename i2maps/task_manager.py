@@ -23,7 +23,7 @@ def main():
             i2maps.tasks.insert_task_details(task.__dict__)
         for task in i2maps.tasks.all():
             if not running_tasks.has_key(task.name):
-                print("%s should run now: %s"%(task.name, task._should_run_now()))
+                # print("%s should run now: %s"%(task.name, task._should_run_now()))
                 if task._should_run_now():
                     p = Process(target=task._run, args=(q,))
                     running_tasks[task.name] = p

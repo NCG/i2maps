@@ -1,0 +1,7 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "database": "i2maps",
+    "user": "i2maps",
+    "password": ""
+}

@@ -399,7 +399,11 @@ function load_i2maps()
         timestampToDateString: function(time){
             d = new Date(time);
             time = d.toTimeString().substr(0,8);
-            return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate() + ' ' + time;
+            m = '' + (d.getMonth()+1);
+            m = m.length < 2 ? '0' + m : m
+            day = '' + d.getDate()
+            day = day.length < 2 ? '0' + day : day
+            return d.getFullYear() + '-' + m + '-' + day + ' ' + time;
         },
         dateStringToTimestamp: function(dateString)
         {

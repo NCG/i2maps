@@ -5,7 +5,7 @@ class Custom():
     js_proxy_object = None
     
     def _as_js_proxy_object(self):
-        if self.js_proxy_object: return self.js_proxy_object
+        #if self.js_proxy_object: return self.js_proxy_object
         import inspect
         methods = []
         for m in inspect.getmembers(self.__class__, inspect.ismethod):

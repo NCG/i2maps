@@ -173,6 +173,9 @@ class SpatialArray(np.ndarray):
     
     @property
     def json(self):
+        properties = {}
+        properties['values'] = self.tolist()
+        properties.update(self.ref.get('properties', None) or {})
         [l, b, r, t] = self.bbox
         r = {
                 'type': 'FeatureCollection',
@@ -182,11 +185,9 @@ class SpatialArray(np.ndarray):
                         "coordinates": [[[l,b], [l,t], [r,t], [r,b], [l,b]]]
                         },
                     'type': 'Feature',
-                    'properties': {
-                        'values': self.tolist()
-                    }
+                    'properties': properties
                 }],
-                'properties': {}
+                'properties': self.ref.get('properties', None) or {}
             }
         return json.dumps(r)
     

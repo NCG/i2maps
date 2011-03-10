@@ -1,5 +1,6 @@
 from .feature_dataset import FeatureDataset
 from .ndim_raster import NDimRaster
+from .feature_collection import FeatureCollection
 # from .raster_cube import Raster_cube
 import i2maps.settings as settings
 import json

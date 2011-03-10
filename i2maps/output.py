@@ -1,7 +1,7 @@
 import decimal
 import json
 def printDecimal(d):
-    n = 3 # Number of decimal places
+    n = 12 # Number of decimal places
     s = str(d)
     s = s[:s.find('.') + 1 + n]
     return '|' + s + '|'
