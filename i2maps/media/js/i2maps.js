@@ -1,6 +1,29 @@
 
+/* Settings.
+ * You can override them before you load this script.
+ * 
+ * In your HTML file, use something like...
+ *   <script type="text/javascript">
+ *     var i2maps_googlemaps_api_key = 'YOUR OWN API KEY';
+ *   </script>
+ *   <script type="text/javascript" src="../../media/js/i2maps.js"></script>
+ * ... to customize i2maps_settings.googlemaps_api_key.
+ */
+var i2maps_default_settings = {
+	// Google maps API key
+    googlemaps_api_key: 'ABQIAAAAGwcE_6OjqiQ_gkEzT4zkehRQ6XxsilBjt0Se4vGYlThGy_5z-RQyP_fTE8P7wYPDMpFVbuL60-fJvQ',
+}
 
+var i2maps_settings = {}
 
+if (typeof i2maps_googlemaps_api_key == "undefined")
+{
+    i2maps_settings.googlemaps_api_key = i2maps_default_settings.googlemaps_api_key;
+}
+else
+{
+	i2maps_settings.googlemaps_api_key = i2maps_googlemaps_api_key;
+}
 
 var scripts = document.getElementsByTagName("script");
 var src = scripts[scripts.length-1].src;
@@ -45,7 +68,7 @@ requireJS("circle.js");
 requireJS("colormap.js");
 requireJS("openlayers-extensions/surface.js");
 requireJS("openlayers-extensions/OpenLayers-ext-min.js");
-requireJS("http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAGwcE_6OjqiQ_gkEzT4zkehRQ6XxsilBjt0Se4vGYlThGy_5z-RQyP_fTE8P7wYPDMpFVbuL60-fJvQ");
+requireJS("http://maps.google.com/maps?file=api&amp;v=2&amp;key=" + i2maps_settings.googlemaps_api_key);
 
 requireCSS("jquery-ui-1.7.2.custom.css");
 requireCSS("ui.panel.css");
