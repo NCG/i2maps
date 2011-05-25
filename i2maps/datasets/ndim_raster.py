@@ -17,8 +17,7 @@ import tempfile
 
 
 class NDimRaster():
-    
-    
+
     def __init__(self, path, params={}, mode='r+'):
         """
         Initializes the raster dataset. If the file at the given path does not
@@ -55,7 +54,7 @@ class NDimRaster():
         if os.path.exists(self.rst_path) == False:
             mode = 'w+'
         self.data = np.memmap(
-            filename = self.rst_path, 
+            filename = self.rst_path,
             dtype = str(self.ref['dtype']) or 'float32',
             mode = mode,
             shape = self.shape
@@ -65,38 +64,31 @@ class NDimRaster():
             fp = open(self.ref_path, 'w')
             fp.write(json.dumps(self.ref))
             fp.close()
-        
-        
+
     def __del__(self):
         del(self.data)
-        
-        
+
     def __getitem__(self, idx):
         return self.data[idx]
-        
-        
+
     def __setitem__(self, idx, val):
         self.data[idx] = val
-        
-        
+
     @property
     def shape(self):
         return tuple(self.ref['shape'])
-        
-        
+
     @property
     def ndims(self):
         """
         Returns the number of dimensions.
         """
         return len(self.shape)
-        
-        
+
     @property
     def resolution(self):
         return tuple([(self.size[i] / self.shape[i]) for i in range(0, self.ndims)])
-        
-        
+
     @property
     def envelope(self):
         """
@@ -105,8 +97,7 @@ class NDimRaster():
         for the 3-dimensional case.
         """
         return self.ref['envelope']
-        
-        
+
     @property
     def size(self):
         """
@@ -114,15 +105,12 @@ class NDimRaster():
         """
         return tuple([float(self.envelope[i][1] - self.envelope[i][0]) for i in range(0, self.ndims)])
         
-        
     @property
     def nodata(self):
         return (self.ref['null'] or -999.0)
         
-        
     def set_null(self, null):
         self.ref['null'] = null
-        
         
     def resize(self, shape):
         # Check that the number of dimensions is the same.
@@ -131,7 +119,7 @@ class NDimRaster():
         # Create first a new data file with the new shape.
         tmpdir = tempfile.mkdtemp() + os.sep
         new_data = np.memmap(
-            filename = tmpdir + "data", 
+            filename = tmpdir + "data",
             dtype = self.ref['dtype'] or 'float32',
             mode = 'w+',
             shape = shape
@@ -153,7 +141,7 @@ class NDimRaster():
         new_envelope = self.envelope
         for i in range(0, self.ndims):
             new_envelope[i] = (
-                new_envelope[i][0], 
+                new_envelope[i][0],
                 new_envelope[i][0] + shape[i]*res[i]
             )
         self.ref['envelope'] = new_envelope
@@ -166,8 +154,7 @@ class NDimRaster():
             mode = self.mode,
             shape = self.shape
         )
-        
-        
+
     def pixel_to_geo(self, px):
         """
         Converts pixel coordinates to geographic space coordinates.
@@ -179,20 +166,18 @@ class NDimRaster():
                 self.envelope[i][0]
             )
         return tuple(geo)
-        
-        
+
     def geo_to_pixel(self, geo):
         """
         Converts real-world coordinates to pixel coordinates.
         """
         px = []
         for i in range(0, min(self.ndims, len(geo))):
-            px.append(int(np.floor((geo[i] - self.envelope[i][0]) / 
+            px.append(int(np.floor((geo[i] - self.envelope[i][0]) /
                 self.resolution[i]))
             )
         return tuple(px)
-        
-        
+ 
     def value_at(self, coord):
         """
         Returns the pixel value at the provided coordinate.
@@ -243,7 +228,7 @@ class NDimRaster():
         # Now, we prepare the slices for each dimension.
         slices = []
         for i in range(0, self.ndims):
-            if i <= len(dims):
+            if i < len(dims):
                 if i == dim1:
                     slices.append(slice(0, self.shape[i]))
                 elif i == dim2:
