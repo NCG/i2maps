@@ -13,10 +13,9 @@ psycopg2.extensions.register_adapter(geos.MultiLineString, str)
 psycopg2.extensions.register_adapter(geos.MultiPoint, str)
 psycopg2.extensions.register_adapter(geos.MultiPolygon, str)
 
-
+geom_oid = None
 
 class Postgres():
-    geom_oid = None
     
     def __init__(self, config):
         self.connection = psycopg2.connect(config)
