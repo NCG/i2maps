@@ -72,13 +72,14 @@ Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
   },
 
 
-    pixelToGeo: function(y,x) {
+    pixelToGeo: function(x, y) {
         // var lon2px = Math.abs(this.getExtent().getWidth()) / this.canvas.width;
         // var lat2px = Math.abs(this.getExtent().getHeight()) / this.canvas.height;
         // var lon = (y * lon2px) - Math.abs(this.getExtent().left);
         // var lat = (((this.canvas.height-1) - x) * lat2px) + Math.abs(this.getExtent().bottom);
         // return [lat, lon];
-        i2maps.debug("Not implemented!");
+        // i2maps.debug("Not implemented!");
+        return this.map.getLonLatFromLayerPx(new OpenLayers.Pixel(x,y))
     },
         
     geoToPixel: function(lat, lon) {
@@ -87,8 +88,18 @@ Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
         // y = Math.round((lon + Math.abs(this.getExtent().left)) / lon2px);
         // x = (this.canvas.height-1) - Math.round((lat - Math.abs(this.getExtent().bottom)) / lat2px);
         
-        var p = this.map.getLayerPxFromLonLat(new OpenLayers.LonLat(lat, lon));
-        return [p.x, p.y];
+        var p = this.map.getLayerPxFromLonLat(new OpenLayers.LonLat(lat, lon)) || {x: 0, y: 0};
+        p[0] = p.x;
+        p[1] = p.y;
+        return p;
+    },
+    
+    colorAtGeo: function(lat, lon) {
+        var p = this.geoToPixel(lat, lon);
+        var ctx = this.canvas.getContext('2d');
+        var data = ctx.getImageData(p[0], p[1], 1, 1).data;
+        rgb = data[2] | (data[1] << 8) | (data[0] << 16);
+        return "#" + rgb.toString(16);
     },
 
   /** 
@@ -136,6 +147,8 @@ Canvas.Layer = OpenLayers.Class(OpenLayers.Layer, {
             this.offsetX = offsetX;
             this.offsetY = offsetY;
             this.old_bounds = bounds;
+            
+            if(this.draw) this.draw(this.canvas);
         }
     },
 
