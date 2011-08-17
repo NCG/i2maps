@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>i2maps  Workshop</title>
+    <link href="prettify.css" type="text/css" rel="stylesheet" />
+    <script src="prettify.js" type="text/javascript"></script>
+    <style type="text/css">
+      html, body {height: 100%; width: 100%;}
+      div, section, html, body {margin: 0px; padding: 0px;}
+      body {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 14px;
+          line-height: 1.5;
+      }
+      #page {
+          margin: 5%;
+          width: 90%;
+      }
+      h3{ margin-left: -.4in; }
+      section {margin-top: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #ccc;}
+      pre, code {background-color: #dee;}
+      ol.outline {font-size: 18px;}
+    </style>
+  </head>
+    <body bgcolor="white">
+<div id="page">
+<h1 style="text-align: center">i2maps Workshop Guide</h1>
+<ol class="outline">
+<li>A brief tour of i2maps</li>
+
+<li>A very brief introduction to Python</li>
+
+<li>A very brief introduction to Javascript</li>
+
+<li>Introduction to Pico - Linking Python and Javascript</li>
+
+<li>Creating a simple i2maps project</li>
+
+<li>Developing a weather modeling application</li>
+</ol>
+
+<section id="python">
+    <h1>Python</h1>
+    <ul>
+      <li>It is <strong>interactive</strong> - use iPython</li>
+      <li>Whitespace is significant -> programs are readable</li>
+      <li>It is object oriented, and it is not - you can pick and choose</li>
+      <li>Dictionaries are extremely useful and fast (they are hash maps):</li>
+<pre>
+d = {}
+d['foo'] = 1
+d['bar'] = {'a': [1,2,3,4]}
+x = d['bar']['a'][0] # x == 1
+</pre>
+    <li>Lists (arrays) expand and contract easily</li>
+<pre>
+a = []
+a.append(1)
+a.extend([2,3,4,5])
+x = a.pop() # x == 5, a == [1,2,3,4]
+del a[1] # a == [1,3,4]
+</pre>
+    <li>Loops are simple:</li>
+<pre>
+for x in a:
+    print(x)
+
+for i, x in enumerate(a):
+    print(i, x)
+</pre>
+    <li>List comprehensions - sometimes you just want to do it all in one line ;)</li>
+<pre>
+m = [x * y for x,y in [(1,4), (2,5), (3,6), (4,7)]]
+</pre>
+    <li>Lambda, map and reduce - functional programming</li>
+<pre>
+m = map(lambda x,y: x*y, [(1,4), (2,5), (3,6), (4,7)]) #same as list comprehension example
+running_sum = reduce(lambda s, (x,y): s + x*y, a, [(1,4), (2,5), (3,6), (4,7)])
+</pre>
+    <li>Modules - files</i>
+    <p>In <i>example.py</i></p>
+<pre>
+def hello():
+    return "Hello World"    
+</pre>
+    <p>In iPython</p>
+<pre>
+import example
+
+example.hello()
+</pre>
+    <li>3rd party libraries:</li>
+        <ul>
+            <li><strong>Numpy</strong> - Fast numerical computation, arrays, matrices, linear algebra, etc</li>
+<pre>
+import numpy as np
+a = np.ones((10,10))
+a[:,0] = 0 # set all of the first column to 0s
+a = a * 5 # multiply all elements by 5
+m = np.matrix(a)
+m = m * m # matrix multiplication
+</pre>            
+            <li><strong>Matplotlib + pylab</strong> - Matlab like plotting</li>
+<pre>
+from pylab import *
+x = arange(0.0, 10.0, 0.1)
+plot(x, sin(x))
+
+x = randn(10000)
+hist(x, 100)
+</pre>
+            <li><strong>GEOS from Django</strong> - a nice Pythonic wrapper around the GEOS C library</li>
+<pre>
+import django.contrib.gis.geos as geos
+
+p = geos.Point(53.38481, -6.60085)
+p.set_srid(4326)
+p.transform(900913)
+p.wkt == 'POINT (5942769.8652956616133451 -736434.1276769586838782)'
+p.json == '{ "type": "Point", "coordinates": [ 5942769.865296, -736434.127677 ] }'
+p.ewkt == 'SRID=900913;POINT (5942769.8652956616133451 -736434.1276769586838782)'
+g = geos.GEOSGeometry('SRID=900913;POINT (5942769.8652956616133451 -736434.1276769586838782)') # g == p
+buffer = p.buffer(100)
+p.within(buffer) == True # of course!
+</pre>            
+         <li><strong>Pico</strong> - see below</li>
+        </ul>
+    <ul>
+</section>
+
+<section id="javascript">
+    <h1>Javascript</h1>
+    <ul>
+      <li>It is <strong>interactive</strong> - use the Developer Console in Chrome</li>
+      <li>Javascript has <strong>NO</strong> relation to Java - its syntax is similar but semantically it is very very different - much more powerful some would say ;)</li>
+      <li>Whitespace is not significant -> be careful not to write ugly code</li>
+      <li>It is very object oriented</li>
+      <li>Objects are extremely useful (they are hash maps):</li> 
+<pre>
+d = {}
+d['foo'] = 1
+d['bar'] = {'a': [1,2,3,4]}
+x = d['bar']['a'][0] // x == 1
+</pre>
+      <li>Arrays expand easily:</li> 
+<pre>
+a = []
+a.push(1)
+a = a.concat([2,3,4,5])
+x = a.pop() // x == 1, a == [2,3,4,5]
+</pre>
+      <li>Functions can be created anonymous and passed around like any other object:</li> 
+<pre>
+f1 = function(x){return x * 10};
+f2 = function(x, f){return f(x)};
+y = f2(5, f1);
+</pre>
+      <li>Variables are scoped to functions or the window object (global):</li> 
+<textarea>
+x = 10;
+
+f = function(y){
+    var z = 3;
+    return y * z * x;
+}
+f(5) == 150;
+
+f2 = function(y){
+    var z = 3;
+    var x = 2;
+    return y * z * x;
+}
+f2(5) == 30;
+
+for(var i=0; i < 4; i++){
+    var x = i * 3;
+    console.log(x)
+}
+console.log(i, x) // i, x are still in scope - loops do not have their own scope, only functions do
+
+</textarea>
+    <p>Hint: ALWAYS declare your variables with <code>var</code>. e.g. <code>var x = 'bla';</code>.<br/>  EXCEPT when you want to keep them global for debugging in the console.</p>
+    
+      <li>forEach loops:</li> 
+<pre>
+[1,2,3,4,5].forEach(function(x){ console.log(x)})
+</pre>
+    <li>Accessing the Document Object Model (DOM) (e.g. HTML or SVG) elements</li>
+<textarea>
+elem = document.getElementById("message");
+elem.innerHTML = "<p>Hello</p>";
+</textarea>
+    <li>3rd party libraries:</li>
+        <ul>
+            <li><strong>jQuery</strong> - DOM manipulation, UI effects, washing the dishes, ...</li>           
+            <li><strong>Flot</strong> - Vector based plotting</li>
+            <li><strong>OpenLayers</strong> - Mapping</li>
+            <li><strong>Protovis, D3</strong> - data visualisation</li>
+            <li><strong>Pico</strong> - see below</li>
+        </ul>
+    </ul>
+</section>
+
+
+<section id="pico">
+    <h1>Pico</h1>
+    <p>Pico is a tiny web application framework. It is the link between server side Python and client side Javascript. See <a href="https://github.com/fergalwalsh/pico">https://github.com/fergalwalsh/pico</a></p>
+    
+    <p>i2maps is built upon Pico so we will first quickly learn how it works.</p>
+    
+    <h2>A simple Pico Hello World example:</h2>
+    <ol class="instructions">
+        <li>Create a new Python file on your desktop called <i>example.py</i>.</li>
+        <li>Edit the file to import pico and write a function that takes no arguments and returns a string:</li>
+<pre>
+import pico
+
+def hello():
+    return "Hello World"
+</pre>
+    <li>Now create <i>example.html</i> on your desktop with the following contents:</li>
+
+<textarea>
+<html>
+<head>
+    <title>Pico Example</title>
+    <script type="text/javascript" src="/pico/pico.js"></script>
+    <script type="text/javascript">
+        pico.import('example');
+        pico.main = function(){
+            var displayMessage = function(message){
+               document.getElementById('message').innerHTML = message;
+           }
+           example.hello(displayMessage);
+        }
+    </script>
+</head>
+<body>
+        <div id="message"></div>
+</body>
+</html>
+</textarea>
+<p>The first script tag loads the pico.js library. <code>pico.import('example')</code> loads the example Python module (asynchronously). When the all of the requests in head are finished, the function assigned to <code>pico.main</code> will be called. Inside this function we set up a callback function called <code>displayMessage</code>. Finally we call the <code>example.hello()</code> with <code>displayMessage</code> as its callback argument.</p>
+
+        <li>Open Terminal;<code>cd Desktop; python -m pico</code></li>
+        <li>Go to <a href="http://localhost:8800/example.html">http://localhost:8800/example.html</a> in Chrome</li>
+
+<h3>Passing Arguments</h3>
+<p>We can also pass arguments when calling Python functions from Javascript. </p>
+    <li>Modify example.py so that <code>hello()</code> takes an argument 'name' and returns a string <code>"Hello" + name</code>:</li>
+<pre>
+import pico
+
+def hello(name="World"):
+    return "Hello " + name
+</pre>
+    <li>Now change the Javascript so that the call to <code>example.hello()</code> takes your name as its first argument:</li>
+    <textarea>
+<html>
+<head>
+    <title>Pico Example</title>
+    <script type="text/javascript" src="/pico/pico.js"></script>
+    <script type="text/javascript">
+        pico.import('example');
+        pico.main = function(){
+            var displayMessage = function(message){
+               document.getElementById('message').innerHTML = message;
+           }
+           example.hello("Fergal", displayMessage);
+        }
+    </script>
+</head>
+<body>
+        <div id="message"></div>
+</body>
+</html>
+    </textarea>
+    </ol>
+</section>
+
+
+<section id="i2maps_project">
+    <h1>i2maps</h1>
+    <p>In this section we will familiarise ourselves with the i2maps framework. We will start by setting up the i2maps projects directory and then create our first project.</p>
+    <h2>Setting up the i2maps projects directory</h2>
+    <ol class="instructions">
+        <li>Create a new folder file on your desktop called <i>i2maps_projects</i>.</li>
+        <li>Inside the newly created folder, create 3 more folders; <i>data, modules, views</i>.</li>
+        <li>Inside the <i>i2maps_projects</i> also create a Python file called <i>run.py</i> with the following contents:</li>
+<pre>
+import i2maps.server
+
+i2maps.projects_directory = '/home/user/Desktop/i2maps_projects/'
+i2maps.server.run()
+</pre>
+    <p>In this small file we simply set the full path to the i2maps projects directory and tell the i2maps server to run. When we want to run the i2maps server in future we will run this file. We will run it now, just to make sure everything is working:</p>
+    <li>Open Terminal; <code>cd Desktop/i2maps_projects; python run.py</code></li>
+<pre class="nocode">
+Serving on http://localhost:8800/
+Using a single thread.
+URL map:
+	^/(.*)$ : /home/user/Desktop/i2maps_projects/views/
+	^/media/(.*)$ : /home/user/Desktop/i2maps/media/ 
+	^/$ : /home/user/Desktop/i2maps/media/index.html 
+Hit CTRL-C to end
+</pre>
+    <p>This just tells you the port that the server is running on and the mapping of urls to the filesystem. This can be useful to check if you are ever having problems with files not being found.</p>
+    </ol>
+    
+    <h2>A simple i2maps Hello World example</h2>
+    <p>Now we will we create a simple i2maps application that contains a Python module that uses the database api and a HTML/Javascript view that uses the maps api.</p>
+    <ol class="instructions">
+    <li>Create a folder in <i>i2maps_projects/views/</i> called <i>world</i></li>
+    <li>Create a file in <i>i2maps_projects/views/world</i> called <i>index.html</i></li>
+    <li>Edit the file to create a very basic html page with the following contents:</li>
+<textarea>
+<html>
+<head>
+    <title>i2maps Hello World</title>
+    <script type="text/javascript" src="../pico/pico.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+        <div id="map" style="width: 800px; height: 600px;"></div>
+</body>
+</html>
+</textarea>
+    <p>Here we are including two scripts. The first is Pico which you know. The second is one that we will create now to define our application. It is best practice to keep the Javscript code separate from the HTML. The <code>div</code> is be the placeholder for our map.</p>
+    <li>Create a file in <i>i2maps_projects/views/world</i> called <i>script.js</i></li>
+    <li>Edit the file to create a very basic html page with the following contents:</li>
+<textarea>
+pico.get('../media/js/i2maps.js');
+
+pico.main = function() {
+    
+    map = new i2maps.Map('map', {
+     baseLayers: ["Open Street Map", "No Base Layer"],
+    });
+    map.zoomTo(2);
+
+}
+</textarea>
+    <p>You should notice the familiar definition of a <code>pico.main</code> function. Note though that we call <code>pico.get()</code> at the top rather <code>pico.import()</code>. This is because we want to include another Javascript file, not import a Python module. <code>'../media/js/i2maps.js'</code> is the main i2maps Javascript file and will be included at the top of every application.<br/>
+    In our <code>pico.main</code> function we create a <code>i2maps.Map</code> object. We pass the name of the placeholder div, <code>'map'</code>, as the first argument and a dictionary of options as the second. In this case the only options we wish to specify are the names of the base layers to include.<br/>
+    Finally, we set the zoom level of the map to show the whole world.
+    </p>
+    <li>Go to <a href="http://localhost:8800/world/index.html">http://localhost:8800/world/index.html</a> in Chrome</li>
+    <p>Hello World.</p>
+    <h3>Querying a database</h3>
+    <p>Next we will demonstrate the database API by creating a Python module to fetch some data from an existing PostGIS database.</p>
+    <li>Create a file in <i>i2maps_projects/modules/</i> called <i>world.py</i></li>
+    <li>Edit the file to contain the following:</li>
+    <pre>
+import pico
+import i2maps.db
+
+db = i2maps.db.Postgres("dbname=natural_earth user=user")
+
+def populated_places(limit=100):
+    result = db.query("""select gid, the_geom 
+            from "10m_populated_places_simple" 
+            order by pop_max desc limit %s""", [limit])
+    places = dict(result)
+    for k in places:
+        places[k].transform(900913)
+    return places
+
+    </pre>
+    <p>This is a simple Python module and quite similar to our Pico Hello World example. Again we import pico. This time we want to connect to a database so we also import <code>i2maps.db</code> and setup a Postgres database connection.<br/>
+        Inside our function we do a database query to select the id and geometry columns using <code>db.query()</code>. We then convert the query result into a dictionary so <code>places</code> will be of the form <code>{id: geometry, id: geometry,...}</code>. Finally we must transform our geometries into EPSG:900913 to be the same as our OSM base layer.</p>
+    <p>Notice anything odd here? We are calling <code>transform()</code> on the dictionary elements assuming that they are GEOS geometry objects. <br/> In i2maps this is a safe assumption - it will automatically convert various types (<code>int, float, datetime and geometries</code>) to their Python counterparts.</p>
+    <p>So now that we have created our Python interface to our database, lets add it into our script.js.</p>
+    <li>First we need to add <code>pico.import('world')</code> to the top.</li>
+    <li>Next we will create a <code>i2maps.VectorLayer</code> and add it to the map.</li>
+    <li>Finally, we will call our newly created <code>world.populated_places()</code> function, passing a callback to update the vector layer:</li>
+<textarea>
+pico.get('../media/js/i2maps.js');
+
+pico.import('world');
+
+pico.main = function() {
+    
+    map = new i2maps.Map('map', {
+     baseLayers: ["Open Street Map", "No Base Layer"],
+    });
+    map.zoomTo(2);
+    
+    world_layer = new i2maps.VectorLayer("world");
+    map.addLayer(world_layer);
+    
+    world.populated_places(100, function(data){
+        countries_data = data;
+        world_layer.setGeometries(countries_data);
+    });
+}
+</textarea>
+
+<p></p>
+    </ol>
+
+    <h2>An interactive weather application</h2>
+    <p>Now that we have seen the basics of how i2maps applications are setup we will create a real, slightly more useful application. We will again query databases but also include interactive spatial and temporal layers. We will also try to make an application that doesn't look too ugly.</p>
+    <p>Our requirements for this application are:
+    <ol>
+        <li>Read temperature sensor measurements from a database and display them on a map.</li>
+        <li>Show a timeline of values when a sensor is selected.</li>
+        <li>Show the corresponding measurements on the map when a time is selected from the timeline.</li>
+        <li>Show a raster surface of predicted temperature values covering Ireland.</li>
+        <li>Show a timeline of predicted values when any point on the surface is selected.</li>
+    </ol>
+    </p>
+    <p>Our database has two tables:<br/>
+        - A sensors table (id, geom, name, elev)<br/>
+        - A measurements table (sensor_id, time, temperature)
+    </p>
+    <h3>Setting up the database interface</h3>
+    <p>The first step is to create our Python module which will interface with this database.</p>
+    <ol class="instructions">
+        <li>Create a directory in <i>i2maps_projects/modules/</i> called <i>weather</i></li>
+        <li>Create a file in <i>i2maps_projects/modules/weather</i> called <i>__init__.py</i></li>
+        <p>We are creating a module as a folder here because we will have a few submodules</p>
+        <li>Create a file in <i>i2maps_projects/modules/weather</i> called <i>sensors.py</i></li>
+        <li>Edit the file to contain the following:</li>
+<pre>
+import i2maps
+import i2maps.db
+from datetime import timedelta
+import pico
+
+db = i2maps.db.Sqlite(i2maps.projects_directory  + "data/example2.db")
+
+def metadata():
+    results = db.query("SELECT id, geom as geometry, name, elev as elevation FROM sensors")
+    sensors = dict([(row['id'], dict(row)) for row in results])
+    for c in sensors:
+         sensors[c]['geometry'].set_srid(4326)
+         sensors[c]['geometry'].transform(900913)
+    return sensors
+</pre>
+    <p>We have setup a connection to an Sqlite database (to be stored in the data directory). Our metadata function queries this to get the details of the sensors, returning a dictionary of dictionaries.</p>
+    <li>Now add the following function for retrieving the sensor measurements at a particular time:</li>
+<pre>
+def measurements(time=None, window_seconds=1800):
+    if time == None:
+        time = db.query("SELECT MAX(time) FROM measurements").fetchone()[0]
+    else:
+        time = i2maps.datestring_to_datetime(time)
+    from_time = time - timedelta(seconds=window_seconds)
+    to_time = time + timedelta(seconds=window_seconds)
+    measurements =  db.query("""SELECT 
+            sensor_id,
+            time,
+            avg(temperature)
+        FROM measurements
+        WHERE time > ?
+        AND time < ?
+        GROUP BY sensor_id""", [from_time, to_time])
+    return dict([(id, {'time': time, 'temperature': temperature}) for id, time, temperature in measurements])    
+</pre>
+    <p>This function is slightly more complicated. We want to select measurements at a particular time. But our measurements are not at exact regular intervals so we want to get the measurements within some time window. We use <code>timedelta(seconds=window_seconds)</code> from the datetime module to set or minimum and maximum time.<br/>
+        We also want to account for the case where we just want the latest measurements, but we don't know when they were. So we allow the time argument to be <code>None</code> and retrieve the maximum time from the database if that is the case.</p>
+    
+    <li>We will add one more function for selecting a timeseries of measurements for a particular sensor:</li>
+<pre>
+def timeline(sensor_id):
+    timeline = db.query("""SELECT time, temperature 
+            FROM measurements 
+            WHERE sensor_id=? 
+            ORDER BY time""", [sensor_id])
+    timeline = dict(timeline)
+    return timeline
+</pre>
+    <p>This function is pretty simple. It just selects the time and temperature values from the database table for the requested sensor id. Our data is simply a mapping of times to values so we use a dictionary.</p>
+    <br/>
+    <h3>Creating a view</h3>
+    <p>Now we are ready to create an interactive view to use these functions.</p>
+    <li>Create a folder in <i>i2maps_projects/views/</i> called <i>weather</i></li>
+    <li>Create a file in <i>i2maps_projects/views/weather</i> called <i>index.html</i></li>
+    <li>Edit this file to be basically the same as our World example except for two additional divs:</li>
+<textarea>
+<html>
+<head>
+    <title>i2maps Weather Application</title>
+    <script type="text/javascript" src="../pico/pico.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+        <div id="map" style="width: 800px; height: 500px;"></div>
+        <div id="timline" style="width: 800px; height: 200px;"></div>
+        <div id="info_box"></div>
+</body>
+</html>
+</textarea>
+    <li>Now we will create our script.js file:</li>
+<pre>
+pico.get('../media/js/i2maps.js');
+
+pico.import('weather.sensors');
+
+pico.main = function() {
+    sensors = weather.sensors;
+    
+    map = new i2maps.Map('map', {
+     baseLayers: ["Open Street Map", "No Base Layer"],
+    });
+    
+    sensors_layer = new i2maps.VectorLayer("sensors");
+    map.addLayer(sensors_layer);
+}
+</pre>
+    <p>This should be familiar and easy to understand so far. Now, lets add some data.</p>
+    <li>Add a call (inside <code>pico.main</code>) to <code>sensors.metadata()</code> with a callback to display the result:</li>
+<pre>
+    sensors.metadata(function(data){
+        sensors_metadata = data;
+        sensors_layer.setGeometries(sensors_metadata, 'geometry');
+    });
+</pre>
+    <p>This time we include the name of the field in the call to <code>sensors_layer.setGeometries()</code> because or object is a dictionary of dictionaries rather than a simple dictionary.</p>
+    <li>Now add a call to <code>sensors.measurements()</code> to fetch the latest measurments.</li>
+<pre>
+    sensors.measurements(function(data){
+        sensor_measurements = data;
+        sensors_layer.redraw();
+    });
+</pre>
+    <li>Go to <a href="http://localhost:8800/world/index.html">http://localhost:8800/weather/index.html</a></li>
+    <p>Eh.. ok, promising but not quite right. So we see our sensor locations but no data. Why?<br/>
+    Because we have not told the layer how to style our geometries or how to link geometries with data. So let's go ahead and do that now.
+    </p>
+    <h3>Styling vectors</h3>
+    <li>Add a styling function to the layer:</li>
+<pre>
+sensors_layer.style_function = function(id, selected){
+    var style;
+    var data = sensor_measurements[id];
+    if(data) style = {
+        'pointRadius': 15,
+        'fillColor': "#ffffff",
+        'fontSize': '11px',
+        'strokeColor': '#000000',
+        'label': data.temperature.toFixed(1),
+    }
+    else {
+        style = {'display': 'none'};
+    }
+    return style;
+}
+</pre>
+    <p><code>sensors_layer.style_function()</code> gets called every time that the map needs to style a particular geometry. The id of the geometry is passed as the first argument and a boolean to say if it is selected is the second.<br/>
+        We set some basic style options and use the id to lookup the <code>sensor_measurements</code> dictionary to get the temperature value to display as a label.<br/>
+    </p>
+    <li>Refresh the page and it should look a bit better.</li>
+    <h3>Selecting vectors</h3>
+    <li>Now lets add a select function so that we can click a sensor and get a bit more information about it:</li>
+<textarea>
+sensors_layer.select_function = function(id){
+    var info = sensors_metadata[id];
+    var data = sensor_measurements[id];
+    var s = "<p>Name: " + info.name + "</p>";
+    s += "<p>Elevation: " + info.elevation + "</p>";
+    s += "<p>Temperature: " + data.temperature + "</p>";
+    s += "<p>Time: " + data.time + "</p>";
+    document.getElementById('info_box').innerHTML = s;
+}
+</textarea>
+    <p>So you should see that <code>sensors_layer.style_function()</code> is very similar to the style function. It gets called when a geometry is selected with its id as the first argument. Here we do some very ugly string concatenation to create a string to display in the info box. <br/>
+    If only there was an easier way to do all that! (of course there is, i2maps.InfoBox, as you will see later).</p>
+    <li>Refresh the page and click on a sensor. At the bottom of the page the info div will be show the info string. Not very pretty, but you get the idea.</li>
+    <p>One problem though, You have no way to see which sensor is selected. This is because we ignored the <code>selected</code> parameter in <code>sensors_layer.style_function()</code>. Let's fix that.</p>
+    <li>Edit <code>sensors_layer.style_function()</code> to add <code>'strokeWidth': (selected ? 2 : 0.1),</code>. This says to give the geometry a 2px border if it is selected, otherwise 0.1px. That should make it stand out.</li>
+    <p>Now we have a layer with geometries and data being fetched from the database, styled as we want it, and selectable. It's time to add some time. We will create a timeline widget and then update it each time we select a sensor.</p>
+    <h3>Adding a timeline</h3>
+    <i>Add the following line to script.js:</i>
+    <pre>
+        timeline = new i2maps.Timeline('timeline', {timespan: "1 week"});
+    </pre>
+    <p>This is similar to creating a map. We pass the div id as the first argument and some options as the second. We specify that we want the default view to show 1 week of data.</p>
+    <li>In <code>sensors_layer.style_function()</code> we will call <code>sensors.timeline(id)</code>:</li>
+<textarea>
+sensors_layer.select_function = function(id){
+    var info = sensors_metadata[id];
+    var data = sensor_measurements[id];
+    var s = "<p>Name: " + info.name + "</p>";
+    s += "<p>Elevation: " + info.elevation + "</p>";
+    s += "<p>Temperature: " + data.temperature + "</p>";
+    s += "<p>Time: " + data.time + "</p>";
+    document.getElementById('info').innerHTML = s;
+    
+    sensors.timeline(id, function(data){timeline.update(data)});
+}
+</textarea>
+    <p>We pass the id of the selected sensor, and the callback function. Our function just takes the data and passes it to <code>timeline.update(data)</code></p>
+    <li>Refresh the page and click on a sensor. Now you should see both the info box and a timline.</li>
+    <p>Ok, now our lack of design is really starting to show. We make this a little less ugly before we proceed any further. As this application is just a web page we can style it any way we like with css. Luckily for you we have one we prepared earlier that you can slot in instead of index.html.</p>
+    <li>Copy <i>~/Desktop/i2maps_workshop/template.html</i> to <i>~/Desktop/i2maps_projects/views/weather/</i> and rename it to <i>index.html</i></li>
+    <li>Refresh the page to see how it looks. It is slightly better, but of course are free to change the HTML and CSS as much as you like until it is just perfect. We will use that sidebar later.</li>
+    
+    <h3>Handling events</h3>
+    <p>Now that we have our timeline in place we need to satisfy our next requirement; updating the map when a different time is selected from the timeline. To do this we will introduce you to <code>i2maps.events</code>.<p>
+    <p>When a point on the timeline is selected, the timeline calls <code>i2maps.events.trigger("timechange", time)</code>. This is called triggering an event. When this happens, all the event listeners associated with that event are called with the parameter <code>time</code>. <br/>
+    So, in order to do something each time the time changes, we should register a listener for the <code>"timechange"</code> event.</p>
+    <li>Add the following lines to script.js (in <code>pico.main</code> as always):</li>
+<pre>
+i2maps.events.register("timechange", function(time){
+    sensors.measurements(time, function(data){
+        sensor_measurements = data;
+        sensors_layer.redraw();
+    });
+});
+</pre>
+    <p>We have a few nested functions here so it looks a bit hairy but it is quite simple.<br/>
+    We register a function with <code>i2maps.events.register("timechange", function(time){...});</code>.<br/>
+    That function gets called with a time parameter which we want to pass to <code>sensors.measurements</code> along with the callback function which is the same as before. We can actually remove the previous call to this function and replace it with a "timechange" trigger.
+    </p>
+    <li>Replace the previous call to <code>sensors.measurements</code> and replace it with <code>i2maps.events.trigger("timechange", null);</code></li>
+    <li>Refresh the page and select a sensor. The timeline will display. Now click a point on the timeline. The values displayed on the map should change.</li>
+
+    <h3>Modelling</h3>
+    <p>Now that we have a vector layer with associated measurements and timeseries, it's time to consider the raster layer. The idea here is to create a temperature model that can be queried in space and time. The model will be updated each time we receive new data. We will display a surface by querying the model for the predicted value at every pixel of a fine grid. We will display a timeseries by querying the model for a single location at multiple time steps.</p>
+    <p>Creating a model that can fully learn the spatial and temporal dependancies of air temperature is quite complex however so we will instead create a simpler model that will provide the same interface as a more complex model. Basically we will run a spatial model, predict on the grid, and save the result each time we receive new data. Then when we query this model we will actually be querying previously computed results.</p>
+    <p>We will start by defining our model as a Python module.</p>
+    <li>Create a file in <i>i2maps_projects/modules/weather</i> called <i>temperature_model.py</i></li>
+    <li>Edit this file to create the basic structure we need:</li>
+<pre>
+import i2maps
+import i2maps.contrib.krls
+import i2maps.raster_cube
+import i2maps.spatial_array
+import pico
+
+import numpy as np
+
+    
+def update(measurements, time):
+    pass
+    
+    
+def surface(time=None):
+    return surface
+
+def timeline(x, y):
+    return timeline
+
+</pre>
+    <li>Edit the update function to setup and train the model:</li>
+<pre>
+def update(measurements, time):
+    measurements = np.array(measurements)
+    data = measurements[:,0:3]
+    targets = measurements[:,3]
+    
+    model = i2maps.contrib.krls.KRLS(
+        kernel=i2maps.contrib.krls.Gaussian(np.array([70000, 70000, 155.5])), 
+        adopt_thresh=0.01,
+        state=data[0,:],
+        target=targets[0],
+        maxsize=100,
+        adaptive=True,
+        forget_rate=0.0
+    )
+    
+    # Train the model (sample by sample)
+    for i in range(1, len(data)):
+        model.update(np.array(data[i,:]), np.array(targets[i]))    
+</pre>
+<p>Now we have a model trained from the measurements data we provide. We will now compute the predictions on the previously mentioned grid:
+<pre>
+    dem = i2maps.spatial_array.load(path + '/data/dem')
+    dem_points = dem.items()
+    output = model.query(dem_points).tolist()
+    predicted = np.array(output).reshape(dem.shape)
+    predicted[dem == dem.nodata] = dem.nodata
+</pre>
+    <p>Here we are loading a Digital Elevation Model (DEM) from a spatial_array on disk. The model uses x,y and elevation to predict temperature so we predict at each element of the DEM grid. <code>dem.items()</code> converts the array structure into a list of (x, y, elevation) tuples. These are then passed to the <code>model.query</code> method.</p>
+    <li>Next we need to save this predicted surface somewhere so it can be easily accessed later:</li>
+<pre>
+    # Open the raster cube
+    try:
+        raster_cube = i2maps.raster_cube.load(filename)
+    except Exception, e:
+        print(e)
+        print("Creating new RasterCube")
+        shape = (372, 282, 24*7) #(height, width, num_timesteps)
+        envelope = [[7436000.0, 6692000.0], [-1168000.0, -604000.0], [0, 0]] #[[min_y, max_y], [min_x, max_x], [min_t, max_t]]
+        raster_cube = i2maps.raster_cube.RasterCube(filename=filename, shape=shape, envelope=envelope)
+    
+    # Save the prediction surface into the raster cube at time t
+    raster_cube.insert(predicted, time)    
+    
+</pre>
+    <p>We use a <code>RasterCube</code> to store the predicted surface. A <code>RasterCube</code> is a memory-mapped 3-Dimensional array with space and time metadata. By inserting <i>t</i> surfaces of size <i>(m,n)</i>, we build up a collection of <i>m*n</i> timelines of length <i>t</i>.</p>
+    <li>Next we will edit the surface and timeline methods of our model:</li>
+<pre>
+def surface(time=None):
+    raster_cube = i2maps.raster_cube.load(filename)        
+    surface = raster_cube.surface(time)
+    return surface
+
+def timeline(geo_x, geo_y):
+    raster_cube = i2maps.raster_cube.load(filename)
+    return raster_cube.timeline(geo_x, geo_y)    
+</pre>    
+    <p>We simply have to load the <code>RasterCube</code> in each case and use the convenience methods for retrieving a timeline or surface. Although the <code>RasterCube</code> is potentially huge in size, it is extremely quick to access temporal or spatial slices because it is memory-mapped rather than being read into memory in full.</p>
+    <li>We must now update our model with some data before we attempt to link it into or view. Create a new file called update.py in <i>i2maps_projects/modules/weather</i> with the following contents:</li>
+<pre>
+import datetime
+import i2maps
+i2maps.project_directory = '/home/user/Desktop/i2maps_projects/'
+import temperature_model
+import sensors
+
+meta = sensors.metadata()
+t = i2maps.datestring_to_datetime("2011-08-11 15:00:00")
+dt = datetime.timedelta(hours=1)
+for i in range(0, 10):
+    t -= dt
+    m = sensors.measurements(str(t))
+    data = [[meta[id]['geometry'].x, meta[id]['geometry'].y, meta[id]['elevation'], m[id]['temperature']] for id in m]
+    temperature_model.update(data, str(t))    
+</pre>
+    <p>We will run this file as script in a minute. It's purpose is to select some measurements from the database and update the model for multiple time steps. We start at <code>"2011-08-11 15:00:00"</code>, the maximum time in our database, and work backwards, 10 steps. The raster cube has slots for 24*7 timesteps but it would take a while to do all the computations to fill it up. This model would typically be updated each time new measurements were collected (e.g. on the hour, every hour) but here we have a database of past data so we will do it in batch mode.</p>
+    <li>Open the terminal; cd /home/user/Desktop/i2maps_projects/modules/weather/; python update.py</li>
+    
+    <h3>Creating a raster layer</h3>
+    <p>We are now ready to setup a raster layer in our view to visualise this modeled temperature data.</p>
+    <li>Edit script.js to add an <code>i2maps.RasterLayer</code>:</li>
+<pre>
+    surface_layer = new i2maps.RasterLayer('Temperature Surface');
+    map.addLayer(surface_layer);
+</pre>
+    <li>Add <code>pico.import('weather.temperature_model');</code> above <code>pico.main</code></li>
+    <li>Add another <code>"timechange"</code> listener to update the surface layer when the time changes:</li>
+<pre>
+    i2maps.events.register("timechange", function(time){
+        model.surface(time, function(data){
+            surface = data;
+            surface_layer.setGeometry(surface.bbox, surface.shape);
+            surface_layer.update();
+        });
+    });    
+</pre>
+    <li>As with the vector layer, we must explicitly state how the layer should be drawn:</li>
+<pre>
+    cm = i2maps.colormap.jet(0, 30);
+    
+    surface_layer.draw_function = function(x, y){
+        var idx = (y * surface_layer.shape[1]) + x;
+        var v = surface.data[idx];
+        if(v >= cm.min){
+            var c = cm(v);
+            c.push(150);
+        }
+        else{
+            var c = [0,0,0,0];
+        }
+        return c;
+    }    
+</pre>
+    <p>First we create a Jet colormap with a range from 0 to 30. (A bit optimistic for Ireland!). We then define  <code>surface_layer.draw_function</code> which takes x,y as parameters and returns a color. In the interest of efficiency our surface values are transferred to Javascript as a flat array so we need a slightly awkward to formula to calculate the correct index in the array for an x,y pair. If the value is greater than the colormap's minimum value, we lookup the corresponding color in the colormap <code>cm</code>.</p>
+    <li>Reload the page. The surface should now display along with the sensors. If you change the time, the surface should update.</li>
+    <li>We now need to add select functionality to the surface layer so that it will display a timeline when we click it, just like the sensors layer.</li>
+<pre>
+    surface_layer.select_function = function(x, y, lat, lon){
+        model.timeline(lat, lon, function(data){timeline.update(data)});
+    }
+</pre>
+    <p>This is quite similar to the vector layer select function except that it takes pixel x,y and lat,lon as parameters instead of id.</p>
+    <li>We can also update the info box when we click on the raster layer. This time we will do it the proper, cleaner way using the <code>i2maps.InfoBox</code> control</li>
+<pre>
+    infobox = new i2maps.InfoBox('info_box', 'Info');
+    
+    surface_layer.select_function = function(x, y, lat, lon){
+        model.timeline(lat, lon, function(data){timeline.update(data)});
+        infobox.update({
+            'Location': [Math.round(lat), Math.round(lon)],
+            'value': surface.data[(y * surface_layer.shape[1]) + x].toFixed(2),
+            'Type': 'Temperature Prediction',
+        });
+    }
+</pre>
+    <li>As an exercise, go back and change the ugly info box code to use <code>infobox.update</code></li>
+    <li>As a second exercise, go back and change the sensors layer style function to use the colormap to set the fill color.</li>
+    
+    <li>We are now going to add a colorbar and mouse hover function to the raster layer so we can see the value under the cursor as we move over the map:</li>
+<pre>
+    colorbar = new i2maps.ColorBar('legend_box', 'Temperature', cm, '&deg;C');
+
+    surface_layer.hover_function = function(x, y){
+        var value = surface.data[(y * surface_layer.shape[1]) + x];
+        if (value > 0) {
+            colorbar.update(value);
+        }
+    }    
+</pre>
+    <p>Here we create a <code>i2maps.ColorBar</code> object using the 'legend_box' div.<br/>
+        We then assign a function to <code>surface_layer.hover_function</code> which takes the x,y location of the mouse on the layer. It doesn't return anything, just updates the value shown on the colorbar.</p>
+    </ol>
+</section>
+
+</div>
+
+
+    <script>
+        Array.prototype.slice.call(document.getElementsByTagName("pre")).forEach(function(e){
+                e.classList.add("prettyprint")
+            });
+        Array.prototype.slice.call(document.getElementsByTagName("code")).forEach(function(e){
+                e.classList.add("prettyprint")
+        });
+        Array.prototype.slice.call(document.getElementsByTagName("textarea")).forEach(function(e){
+                var s = e.textContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                var elem = document.createElement("pre");
+                elem.innerHTML = s;
+                elem.classList.add("prettyprint")
+                e.parentNode.replaceChild(elem, e);
+            });
+        prettyPrint();
+    </script>
+</body>
+</html>
