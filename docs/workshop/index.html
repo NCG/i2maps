@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 
 <html>
+<!--
+Any source code inside <pre>, <code> or <textarea> tages will be prettified.
+Any html code must be placed in a <textarea> - it will be escaped and converted to a pre
+Do not escape html code manually - it is ugly
+-->
   <head>
     <title>i2maps  Workshop</title>
     <link href="prettify.css" type="text/css" rel="stylesheet" />
@@ -132,7 +137,7 @@ p.within(buffer) == True # of course!
 <section id="javascript">
     <h1>Javascript</h1>
     <ul>
-      <li>It is <strong>interactive</strong> - use the Developer Console in Chrome</li>
+      <li>It is <strong>interactive</strong> - use the Developer Console in Chrome (spanner - Tools - Javascript Console ) </li>
       <li>Javascript has <strong>NO</strong> relation to Java - its syntax is similar but semantically it is very very different - much more powerful some would say ;)</li>
       <li>Whitespace is not significant -> be careful not to write ugly code</li>
       <li>It is very object oriented</li>
@@ -487,7 +492,7 @@ def timeline(sensor_id):
 </head>
 <body>
         <div id="map" style="width: 800px; height: 500px;"></div>
-        <div id="timline" style="width: 800px; height: 200px;"></div>
+        <div id="timeline" style="width: 800px; height: 200px;"></div>
         <div id="info_box"></div>
 </body>
 </html>
@@ -520,6 +525,8 @@ pico.main = function() {
     <p>This time we include the name of the field in the call to <code>sensors_layer.setGeometries()</code> because or object is a dictionary of dictionaries rather than a simple dictionary.</p>
     <li>Now add a call to <code>sensors.measurements()</code> to fetch the latest measurments.</li>
 <pre>
+    sensor_measurements = {};
+    
     sensors.measurements(function(data){
         sensor_measurements = data;
         sensors_layer.redraw();
@@ -586,8 +593,7 @@ sensors_layer.select_function = function(id){
     s += "<p>Elevation: " + info.elevation + "</p>";
     s += "<p>Temperature: " + data.temperature + "</p>";
     s += "<p>Time: " + data.time + "</p>";
-    document.getElementById('info').innerHTML = s;
-    
+    document.getElementById('info_box').innerHTML = s;
     sensors.timeline(id, function(data){timeline.update(data)});
 }
 </textarea>
@@ -614,7 +620,10 @@ i2maps.events.register("timechange", function(time){
     We register a function with <code>i2maps.events.register("timechange", function(time){...});</code>.<br/>
     That function gets called with a time parameter which we want to pass to <code>sensors.measurements</code> along with the callback function which is the same as before. We can actually remove the previous call to this function and replace it with a "timechange" trigger.
     </p>
-    <li>Replace the previous call to <code>sensors.measurements</code> and replace it with <code>i2maps.events.trigger("timechange", null);</code></li>
+    <li>Add the following as the last line of <code>pico.main</code>:</li>
+<pre>
+    i2maps.events.trigger("timechange", null);
+</pre>
     <li>Refresh the page and select a sensor. The timeline will display. Now click a point on the timeline. The values displayed on the map should change.</li>
 
     <h3>Modelling</h3>
@@ -632,6 +641,8 @@ import pico
 
 import numpy as np
 
+path = i2maps.projects_path
+filename = path + 'data/ireland_temperature'
     
 def update(measurements, time):
     pass
@@ -707,7 +718,7 @@ def timeline(geo_x, geo_y):
 <pre>
 import datetime
 import i2maps
-i2maps.project_directory = '/home/user/Desktop/i2maps_projects/'
+i2maps.projects_directory = '/home/user/Desktop/i2maps_projects/'
 import temperature_model
 import sensors
 
@@ -784,7 +795,7 @@ for i in range(0, 10):
     <li>As a second exercise, go back and change the sensors layer style function to use the colormap to set the fill color.</li>
     
     <li>We are now going to add a colorbar and mouse hover function to the raster layer so we can see the value under the cursor as we move over the map:</li>
-<pre>
+<textarea>
     colorbar = new i2maps.ColorBar('legend_box', 'Temperature', cm, '&deg;C');
 
     surface_layer.hover_function = function(x, y){
@@ -793,7 +804,7 @@ for i in range(0, 10):
             colorbar.update(value);
         }
     }    
-</pre>
+</textarea>
     <p>Here we create a <code>i2maps.ColorBar</code> object using the 'legend_box' div.<br/>
         We then assign a function to <code>surface_layer.hover_function</code> which takes the x,y location of the mouse on the layer. It doesn't return anything, just updates the value shown on the colorbar.</p>
     </ol>
