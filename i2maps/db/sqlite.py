@@ -2,6 +2,7 @@ import django.contrib.gis.geos as geos
 import sqlite3
 
 import i2maps
+import database
 
 sqlite3.register_converter("datetime", i2maps.datestring_to_datetime)
 sqlite3.register_converter("GEOMETRY", geos.GEOSGeometry)
@@ -14,7 +15,7 @@ sqlite3.register_adapter(geos.MultiLineString, str)
 sqlite3.register_adapter(geos.MultiPoint, str)
 sqlite3.register_adapter(geos.MultiPolygon, str)
 
-class Sqlite():
+class Sqlite(database.Database):
     
     def __init__(self, path):
         self.connection = sqlite3.connect(database=path, detect_types=sqlite3.PARSE_DECLTYPES)

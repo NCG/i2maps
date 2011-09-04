@@ -3,6 +3,7 @@ import psycopg2
 import psycopg2.extras
 
 import i2maps
+import database
 
 psycopg2.extensions.register_adapter(geos.Point, str)
 psycopg2.extensions.register_adapter(geos.Polygon, str)
@@ -15,7 +16,7 @@ psycopg2.extensions.register_adapter(geos.MultiPolygon, str)
 
 geom_oid = None
 
-class Postgres():
+class Postgres(database.Database):
     
     def __init__(self, config):
         self.connection = psycopg2.connect(config)
