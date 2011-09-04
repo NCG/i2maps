@@ -95,7 +95,7 @@ import example
 
 example.hello()
 </pre>
-    <li>3rd party libraries:</li>
+    <li>3rd party libraries that we use:</li>
         <ul>
             <li><strong>Numpy</strong> - Fast numerical computation, arrays, matrices, linear algebra, etc</li>
 <pre>
@@ -106,7 +106,7 @@ a = a * 5 # multiply all elements by 5
 m = np.matrix(a)
 m = m * m # matrix multiplication
 </pre>            
-            <li><strong>Matplotlib + pylab</strong> - Matlab like plotting</li>
+            <!-- <li><strong>Matplotlib + pylab</strong> - Matlab like plotting</li>
 <pre>
 from pylab import *
 x = arange(0.0, 10.0, 0.1)
@@ -114,7 +114,7 @@ plot(x, sin(x))
 
 x = randn(10000)
 hist(x, 100)
-</pre>
+</pre> -->
             <li><strong>GEOS from Django</strong> - a nice Pythonic wrapper around the GEOS C library</li>
 <pre>
 import django.contrib.gis.geos as geos
@@ -129,7 +129,7 @@ g = geos.GEOSGeometry('SRID=900913;POINT (5942769.8652956616133451 -736434.12767
 buffer = p.buffer(100)
 p.within(buffer) == True # of course!
 </pre>            
-         <li><strong>Pico</strong> - see below</li>
+         <li><strong>Pico</strong> - for building Python powered web applications (see below)</li>
         </ul>
     <ul>
 </section>
@@ -196,12 +196,12 @@ console.log(i, x) // i, x are still in scope - loops do not have their own scope
 elem = document.getElementById("message");
 elem.innerHTML = "<p>Hello</p>";
 </textarea>
-    <li>3rd party libraries:</li>
+    <li>3rd party libraries that we use:</li>
         <ul>
             <li><strong>jQuery</strong> - DOM manipulation, UI effects, washing the dishes, ...</li>           
             <li><strong>Flot</strong> - Vector based plotting</li>
             <li><strong>OpenLayers</strong> - Mapping</li>
-            <li><strong>Protovis, D3</strong> - data visualisation</li>
+            <!-- <li><strong>Protovis, D3</strong> - data visualisation</li> -->
             <li><strong>Pico</strong> - see below</li>
         </ul>
     </ul>
@@ -363,17 +363,16 @@ import i2maps.db
 db = i2maps.db.Postgres("dbname=natural_earth user=user")
 
 def populated_places(limit=100):
-    result = db.query("""select gid, the_geom 
+    places = db.dict_query("""select gid, the_geom 
             from "10m_populated_places_simple" 
             order by pop_max desc limit %s""", [limit])
-    places = dict(result)
     for k in places:
         places[k].transform(900913)
     return places
 
     </pre>
     <p>This is a simple Python module and quite similar to our Pico Hello World example. Again we import pico. This time we want to connect to a database so we also import <code>i2maps.db</code> and setup a Postgres database connection.<br/>
-        Inside our function we do a database query to select the id and geometry columns using <code>db.query()</code>. We then convert the query result into a dictionary so <code>places</code> will be of the form <code>{id: geometry, id: geometry,...}</code>. Finally we must transform our geometries into EPSG:900913 to be the same as our OSM base layer.</p>
+        Inside our function we do a database query to select a dictionary of ids mapped to geometry columns using <code>db.dict_query()</code>. The result will be a dictionary of the form <code>{id: geometry, id: geometry,...}</code>. Finally we must transform our geometries into EPSG:900913 to be the same as our OSM base layer.</p>
     <p>Notice anything odd here? We are calling <code>transform()</code> on the dictionary elements assuming that they are GEOS geometry objects. <br/> In i2maps this is a safe assumption - it will automatically convert various types (<code>int, float, datetime and geometries</code>) to their Python counterparts.</p>
     <p>So now that we have created our Python interface to our database, lets add it into our script.js.</p>
     <li>First we need to add <code>pico.import('world')</code> to the top.</li>
@@ -436,8 +435,7 @@ import pico
 db = i2maps.db.Sqlite(i2maps.projects_directory  + "data/example2.db")
 
 def metadata():
-    results = db.query("SELECT id, geom as geometry, name, elev as elevation FROM sensors")
-    sensors = dict([(row['id'], dict(row)) for row in results])
+    sensors = db.dict_query("SELECT id, geom as geometry, name, elev as elevation FROM sensors")
     for c in sensors:
          sensors[c]['geometry'].set_srid(4326)
          sensors[c]['geometry'].transform(900913)
@@ -449,34 +447,32 @@ def metadata():
 def measurements(time=None, window_seconds=1800):
     if time == None:
         time = db.query("SELECT MAX(time) FROM measurements").fetchone()[0]
-    else:
-        time = i2maps.datestring_to_datetime(time)
     from_time = time - timedelta(seconds=window_seconds)
     to_time = time + timedelta(seconds=window_seconds)
-    measurements =  db.query("""SELECT 
+    measurements =  db.dict_query("""SELECT 
             sensor_id,
             time,
-            avg(temperature)
+            avg(temperature) as temperature
         FROM measurements
         WHERE time > ?
         AND time < ?
         GROUP BY sensor_id""", [from_time, to_time])
-    return dict([(id, {'time': time, 'temperature': temperature}) for id, time, temperature in measurements])    
+    return measurements  
 </pre>
     <p>This function is slightly more complicated. We want to select measurements at a particular time. But our measurements are not at exact regular intervals so we want to get the measurements within some time window. We use <code>timedelta(seconds=window_seconds)</code> from the datetime module to set or minimum and maximum time.<br/>
-        We also want to account for the case where we just want the latest measurements, but we don't know when they were. So we allow the time argument to be <code>None</code> and retrieve the maximum time from the database if that is the case.</p>
+        We also want to account for the case where we just want the latest measurements, but we don't know when they were. So we allow the time argument to be <code>None</code> and retrieve the maximum time from the database if that is the case.<br/>
+        Notice that we treat the time argument as if it is a Python <code>datetime</code> object. This is because Pico takes care of converting arguments to Python types when possible. Date strings of the form "YYYY-mm-dd HH:MM:SS" are converted to <code>datetime</code> objects.</p>
     
     <li>We will add one more function for selecting a timeseries of measurements for a particular sensor:</li>
 <pre>
 def timeline(sensor_id):
-    timeline = db.query("""SELECT time, temperature 
+    timeline = db.dict_query("""SELECT time, temperature 
             FROM measurements 
             WHERE sensor_id=? 
             ORDER BY time""", [sensor_id])
-    timeline = dict(timeline)
     return timeline
 </pre>
-    <p>This function is pretty simple. It just selects the time and temperature values from the database table for the requested sensor id. Our data is simply a mapping of times to values so we use a dictionary.</p>
+    <p>This function is pretty simple. It just selects the time and temperature values from the database table for the requested sensor id. Our data is simply a mapping of times to values so we use <code>db.dict_query()</code> to retrieve a dictionary.</p>
     <br/>
     <h3>Creating a view</h3>
     <p>Now we are ready to create an interactive view to use these functions.</p>
@@ -560,21 +556,23 @@ sensors_layer.style_function = function(id, selected){
     </p>
     <li>Refresh the page and it should look a bit better.</li>
     <h3>Selecting vectors</h3>
-    <li>Now lets add a select function so that we can click a sensor and get a bit more information about it:</li>
+    <li>Now lets add a select function so that we can click a sensor and get a bit more information about it in the info box:</li>
 <textarea>
-sensors_layer.select_function = function(id){
-    var info = sensors_metadata[id];
-    var data = sensor_measurements[id];
-    var s = "<p>Name: " + info.name + "</p>";
-    s += "<p>Elevation: " + info.elevation + "</p>";
-    s += "<p>Temperature: " + data.temperature + "</p>";
-    s += "<p>Time: " + data.time + "</p>";
-    document.getElementById('info_box').innerHTML = s;
-}
+    infobox = new i2maps.InfoBox('info_box', 'Info');
+    sensors_layer.select_function = function(id){
+        infobox.update({
+            'Id': id,
+            'Value': sensor_measurements[id].temperature,
+            'Time': sensor_measurements[id].time,
+            'Type': 'Temperature Sensor',
+            'Name': sensors_metadata[id].name,
+            'Elevation': sensors_metadata[id].elevation
+        });    
+    };
+
 </textarea>
-    <p>So you should see that <code>sensors_layer.style_function()</code> is very similar to the style function. It gets called when a geometry is selected with its id as the first argument. Here we do some very ugly string concatenation to create a string to display in the info box. <br/>
-    If only there was an easier way to do all that! (of course there is, i2maps.InfoBox, as you will see later).</p>
-    <li>Refresh the page and click on a sensor. At the bottom of the page the info div will be show the info string. Not very pretty, but you get the idea.</li>
+    <p>So you should see that <code>sensors_layer.select_function()</code> is very similar to the style function. It gets called when a geometry is selected with its id as the first argument. Here we use the <code>i2maps.InfoBox</code> control to display some information about the selected sensor. This control takes a dictionary and formats it nicely.</p>
+    <li>Refresh the page and click on a sensor. At the bottom of the page the info div will show the info string. Not very pretty, but you get the idea.</li>
     <p>One problem though, You have no way to see which sensor is selected. This is because we ignored the <code>selected</code> parameter in <code>sensors_layer.style_function()</code>. Let's fix that.</p>
     <li>Edit <code>sensors_layer.style_function()</code> to add <code>'strokeWidth': (selected ? 2 : 0.1),</code>. This says to give the geometry a 2px border if it is selected, otherwise 0.1px. That should make it stand out.</li>
     <p>Now we have a layer with geometries and data being fetched from the database, styled as we want it, and selectable. It's time to add some time. We will create a timeline widget and then update it each time we select a sensor.</p>
@@ -587,15 +585,16 @@ sensors_layer.select_function = function(id){
     <li>In <code>sensors_layer.style_function()</code> we will call <code>sensors.timeline(id)</code>:</li>
 <textarea>
 sensors_layer.select_function = function(id){
-    var info = sensors_metadata[id];
-    var data = sensor_measurements[id];
-    var s = "<p>Name: " + info.name + "</p>";
-    s += "<p>Elevation: " + info.elevation + "</p>";
-    s += "<p>Temperature: " + data.temperature + "</p>";
-    s += "<p>Time: " + data.time + "</p>";
-    document.getElementById('info_box').innerHTML = s;
+    infobox.update({
+        'Id': id,
+        'Value': sensor_measurements[id].temperature,
+        'Time': sensor_measurements[id].time,
+        'Type': 'Temperature Sensor',
+        'Name': sensors_metadata[id].name,
+        'Elevation': sensors_metadata[id].elevation
+    });
     sensors.timeline(id, function(data){timeline.update(data)});
-}
+};
 </textarea>
     <p>We pass the id of the selected sensor, and the callback function. Our function just takes the data and passes it to <code>timeline.update(data)</code></p>
     <li>Refresh the page and click on a sensor. Now you should see both the info box and a timline.</li>
@@ -778,9 +777,8 @@ for i in range(0, 10):
     }
 </pre>
     <p>This is quite similar to the vector layer select function except that it takes pixel x,y and lat,lon as parameters instead of id.</p>
-    <li>We can also update the info box when we click on the raster layer. This time we will do it the proper, cleaner way using the <code>i2maps.InfoBox</code> control</li>
+    <li>We can also update the info box when we click on the raster layer. Again we will use the <code>i2maps.InfoBox</code> control</li>
 <pre>
-    infobox = new i2maps.InfoBox('info_box', 'Info');
     
     surface_layer.select_function = function(x, y, lat, lon){
         model.timeline(lat, lon, function(data){timeline.update(data)});
@@ -791,8 +789,8 @@ for i in range(0, 10):
         });
     }
 </pre>
-    <li>As an exercise, go back and change the ugly info box code to use <code>infobox.update</code></li>
-    <li>As a second exercise, go back and change the sensors layer style function to use the colormap to set the fill color.</li>
+    <!-- TODO: Move this! -->
+    <li>As an second exercise, go back and change the sensors layer style function to use the colormap to set the fill color.</li>
     
     <li>We are now going to add a colorbar and mouse hover function to the raster layer so we can see the value under the cursor as we move over the map:</li>
 <textarea>
