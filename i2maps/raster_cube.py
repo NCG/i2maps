@@ -1,7 +1,7 @@
 import datetime
-import os
 import numpy as np
 
+import i2maps
 import spatial_array
 
 def load(filename):
@@ -22,6 +22,8 @@ class RasterCube():
             self.spatial_array.ref['times'] = {}
     
     def insert(self, surface, time):
+        if isinstance(time, datetime.datetime):
+            time = i2maps.datetime_to_datestring(time)
         max_length = self.spatial_array.shape[2]
         times = self.spatial_array.ref['times']
         keys = sorted(times.keys())
@@ -43,6 +45,8 @@ class RasterCube():
         return idx
         
     def surface(self, time=None):
+        if isinstance(time, datetime.datetime):
+            time = i2maps.datetime_to_datestring(time)
         times = np.array(self.times())
         if not time: time = times[-1]
         time_key = times[times.searchsorted(time) - 1]
