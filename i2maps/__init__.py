@@ -7,6 +7,9 @@ path = os.path.dirname(os.path.normpath(__file__)) + "/"
 def datetime_to_timestamp(d):
     return int(time.mktime(d.timetuple()))
 
+def datetime_to_datestring(d):
+    return str(d)[:19]
+
 def timestamp_to_datetime(d):
     return datetime.datetime.utcfromtimestamp(d)
 
