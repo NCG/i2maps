@@ -756,8 +756,7 @@ for i in range(0, 10):
     cm = i2maps.colormap.jet(0, 30);
     
     surface_layer.draw_function = function(x, y){
-        var idx = (y * surface_layer.shape[1]) + x;
-        var v = surface.data[idx];
+        var v = surface.data[y][x];
         if(v >= cm.min){
             var c = cm(v);
             c.push(150);
@@ -768,7 +767,7 @@ for i in range(0, 10):
         return c;
     }    
 </pre>
-    <p>First we create a Jet colormap with a range from 0 to 30. (A bit optimistic for Ireland!). We then define  <code>surface_layer.draw_function</code> which takes x,y as parameters and returns a color. In the interest of efficiency our surface values are transferred to Javascript as a flat array so we need a slightly awkward to formula to calculate the correct index in the array for an x,y pair. If the value is greater than the colormap's minimum value, we lookup the corresponding color in the colormap <code>cm</code>.</p>
+    <p>First we create a Jet colormap with a range from 0 to 30. (A bit optimistic for Ireland!). We then define  <code>surface_layer.draw_function</code> which takes x,y as parameters and returns a color. We retrieve the value from the surface data corresponding to the x,y. Notice that we index as <code>[y][x]</code> because the data is structured as an array of rows. If the value is greater than the colormap's minimum value, we lookup the corresponding color in the colormap <code>cm</code>.</p>
     <li>Reload the page. The surface should now display along with the sensors. If you change the time, the surface should update.</li>
     <li>We now need to add select functionality to the surface layer so that it will display a timeline when we click it, just like the sensors layer.</li>
 <pre>
@@ -784,7 +783,7 @@ for i in range(0, 10):
         model.timeline(lat, lon, function(data){timeline.update(data)});
         infobox.update({
             'Location': [Math.round(lat), Math.round(lon)],
-            'value': surface.data[(y * surface_layer.shape[1]) + x].toFixed(2),
+            'value': surface.data[y][x].toFixed(2),
             'Type': 'Temperature Prediction',
         });
     }
@@ -797,7 +796,7 @@ for i in range(0, 10):
     colorbar = new i2maps.ColorBar('legend_box', 'Temperature', cm, '&deg;C');
 
     surface_layer.hover_function = function(x, y){
-        var value = surface.data[(y * surface_layer.shape[1]) + x];
+        var value = surface.data[y][x];
         if (value > 0) {
             colorbar.update(value);
         }

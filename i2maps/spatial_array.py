@@ -182,7 +182,7 @@ class SpatialArray(np.ndarray):
         response = {}
         response['bbox'] = self.bbox #[l, b, r, t]
         response['shape'] = self.shape
-        response['data'] = np.around(self.view(np.ndarray).ravel(), decimals=2)
+        response['data'] = np.around(self.view(np.ndarray), decimals=2)
         response['properties'] = properties
         return pico.to_json(response)
     
