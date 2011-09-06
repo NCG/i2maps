@@ -757,17 +757,15 @@ for i in range(0, 10):
     
     surface_layer.draw_function = function(x, y){
         var v = surface.data[y][x];
-        if(v >= cm.min){
-            var c = cm(v);
-            c.push(150);
-        }
-        else{
-            var c = [0,0,0,0];
-        }
-        return c;
+        return cm(v, [0,0,0,0]);
     }    
 </pre>
-    <p>First we create a Jet colormap with a range from 0 to 30. (A bit optimistic for Ireland!). We then define  <code>surface_layer.draw_function</code> which takes x,y as parameters and returns a color. We retrieve the value from the surface data corresponding to the x,y. Notice that we index as <code>[y][x]</code> because the data is structured as an array of rows. If the value is greater than the colormap's minimum value, we lookup the corresponding color in the colormap <code>cm</code>.</p>
+    <p>First we create a Jet colormap with a range from 0 to 30. (A bit optimistic for Ireland!). We then define  <code>surface_layer.draw_function</code> which takes x,y as parameters and returns a color. We retrieve the value from the surface data corresponding to the x,y. Notice that we index as <code>[y][x]</code> because the data is structured as an array of rows. We call <code>cm()</code> with the value and a default color. The return value is an array of the form <code>[r, g, b, a]</code>. The default is used if the value is outside the range of the colormap. In this case the default is fully transparent black.</p>
+    <li>We can now go back and change the sensors layer style function to use the same colormap to set the fill color. In <code>sensors_layer.style_function</code>:</li>
+<pre>
+    'fillColor': cm(data.temperature).html(),
+</pre>
+    <p>Note <code>.html()</code> converts the return value of <code>cm</code> into a html color string like <code>"#0044CC"</code>.</p>
     <li>Reload the page. The surface should now display along with the sensors. If you change the time, the surface should update.</li>
     <li>We now need to add select functionality to the surface layer so that it will display a timeline when we click it, just like the sensors layer.</li>
 <pre>
@@ -788,8 +786,6 @@ for i in range(0, 10):
         });
     }
 </pre>
-    <!-- TODO: Move this! -->
-    <li>As an second exercise, go back and change the sensors layer style function to use the colormap to set the fill color.</li>
     
     <li>We are now going to add a colorbar and mouse hover function to the raster layer so we can see the value under the cursor as we move over the map:</li>
 <textarea>

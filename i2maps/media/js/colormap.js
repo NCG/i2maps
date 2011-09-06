@@ -31,8 +31,9 @@ i2maps.colormap = (function (){
             cdict[c].forEach(function(x){stops[c].push(x[0])})
         }
         var f = function(min, max){
-            var cm = function(value, hex)
+            var cm = function(value, default_color)
             {
+                if(value < min || value > max) return default_color;
                 var v = (value-min) * (1/(max-min));
                 // console.log('v:' + v);
                 var color = {};
@@ -55,11 +56,16 @@ i2maps.colormap = (function (){
                     }
                     color[c] = Math.floor(color[c] * 255);
                 }
-                if(hex)
+                if(arguments[arguments.length-1] === true)
                 {
                       return "#" + lpad(color['red'].toString(16), 2) + lpad(color['green'].toString(16), 2) + lpad(color['blue'].toString(16), 2);
                 }
-                return [color['red'], color['green'], color['blue']]
+                var c = [color['red'], color['green'], color['blue'], 255];
+                c.html = function(){
+                    return "#" + lpad(this[0].toString(16), 2) + lpad(this[1].toString(16), 2) + lpad(this[2].toString(16), 2);
+                };
+                
+                return c;
             }
             cm.min = min;
             cm.max = max;
