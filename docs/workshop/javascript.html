@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html>
+<!--
+Any source code inside <pre>, <code> or <textarea> tages will be prettified.
+Any html code must be placed in a <textarea> - it will be escaped and converted to a pre
+Do not escape html code manually - it is ugly
+-->
+  <head>
+    <title>i2maps  Workshop</title>
+    <link href="prettify.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+      html, body {height: 100%; width: 100%;}
+      div, section, html, body {margin: 0px; padding: 0px;}
+      body {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 14px;
+          line-height: 1.5;
+      }
+      #page {
+          margin: 5%;
+          width: 90%;
+      }
+      h3{ margin-left: -.4in; }
+      section {margin-top: 20px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #ccc;}
+      pre, code {background-color: #dee;}
+      ol.outline {font-size: 18px;}
+    </style>
+  </head>
+    <body bgcolor="white">
+<div id="page">
+<section id="javascript">
+    <h1>Javascript</h1>
+    <ul>
+      <li>It is <strong>interactive</strong> - use the Developer Console in Chrome (spanner - Tools - Javascript Console ) </li>
+      <li>Javascript has <strong>NO</strong> relation to Java - its syntax is similar but semantically it is very very different - much more powerful some would say ;)</li>
+      <li>Whitespace is not significant -> be careful not to write ugly code</li>
+      <li>It is very object oriented</li>
+      <li>Objects are extremely useful (they are hash maps):</li> 
+<pre>
+d = {}
+d['foo'] = 1
+d['bar'] = {'a': [1,2,3,4]}
+x = d['bar']['a'][0] // x == 1
+</pre>
+      <li>Arrays expand easily:</li> 
+<pre>
+a = []
+a.push(1)
+a = a.concat([2,3,4,5])
+x = a.pop() // x == 1, a == [2,3,4,5]
+</pre>
+      <li>Functions can be created anonymous and passed around like any other object:</li> 
+<pre>
+f1 = function(x){return x * 10};
+f2 = function(x, f){return f(x)};
+y = f2(5, f1);
+</pre>
+      <li>Variables are scoped to functions or the window object (global):</li> 
+<textarea>
+x = 10;
+
+f = function(y){
+    var z = 3;
+    return y * z * x;
+}
+f(5) == 150;
+
+f2 = function(y){
+    var z = 3;
+    var x = 2;
+    return y * z * x;
+}
+f2(5) == 30;
+
+for(var i=0; i < 4; i++){
+    var x = i * 3;
+    console.log(x)
+}
+console.log(i, x) // i, x are still in scope - loops do not have their own scope, only functions do
+
+</textarea>
+    <p>Hint: ALWAYS declare your variables with <code>var</code>. e.g. <code>var x = 'bla';</code>.<br/>  EXCEPT when you want to keep them global for debugging in the console.</p>
+    
+      <li>forEach loops:</li> 
+<pre>
+[1,2,3,4,5].forEach(function(x){ console.log(x)})
+</pre>
+    <li>Accessing the Document Object Model (DOM) (e.g. HTML or SVG) elements</li>
+<textarea>
+elem = document.getElementById("message");
+elem.innerHTML = "<p>Hello</p>";
+</textarea>
+    <li>3rd party libraries that we use:</li>
+        <ul>
+            <li><strong>jQuery</strong> - DOM manipulation, UI effects, washing the dishes, ...</li>           
+            <li><strong>Flot</strong> - Vector based plotting</li>
+            <li><strong>OpenLayers</strong> - Mapping</li>
+            <!-- <li><strong>Protovis, D3</strong> - data visualisation</li> -->
+            <li><strong>Pico</strong> - see below</li>
+        </ul>
+    </ul>
+</section>
+
+
+
+</div>
+
+<script src="prettify.js" type="text/javascript"></script>
+</body>
+</html>

@@ -1475,3 +1475,19 @@ var REGEXP_PRECEDER_PATTERN = '(?:^^\\.?|[+-]|\\!|\\!=|\\!==|\\#|\\%|\\%=|&|&&|&
         'PR_TYPE': PR_TYPE
       };
 })();
+
+
+Array.prototype.slice.call(document.getElementsByTagName("pre")).forEach(function(e){
+        e.className = "prettyprint";
+    });
+Array.prototype.slice.call(document.getElementsByTagName("code")).forEach(function(e){
+        e.className = "prettyprint";
+});
+Array.prototype.slice.call(document.getElementsByTagName("textarea")).forEach(function(e){
+        var s = e.textContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        var elem = document.createElement("pre");
+        elem.innerHTML = s;
+        elem.className = "prettyprint";
+        e.parentNode.replaceChild(elem, e);
+    });
+prettyPrint();
