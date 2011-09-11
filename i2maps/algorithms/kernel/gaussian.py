@@ -10,9 +10,10 @@ class Gaussian:
         self.sigma = sigma
     
     def __call__(self, X, Z):
-        return self.kernel(X, Z, self.sigma)
+        return Gaussian.kernel(X, Z, self.sigma)
     
-    def kernel(self, X, Z, sigma):
+    @classmethod
+    def kernel(cls, X, Z, sigma):
         """
         Computes the Gaussian kernel for the matrices X and Z.
         """
@@ -32,5 +33,5 @@ class Gaussian:
         ZZ = np.multiply(Z, Z)
         ZZ = ZZ.sum(axis = 1)
         d = np.tile(XX, (1, m)) + np.tile(ZZ.T, (n, 1)) - 2 * X * Z.T
-        Kexpd = np.exp(-d.T / (2 * sigma * sigma));
-        return np.array(Kexpd);
+        Kexpd = np.exp(-d.T / (2 * sigma * sigma))
+        return np.array(Kexpd)
