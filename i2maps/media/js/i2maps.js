@@ -143,18 +143,17 @@ function load_i2maps(){
             else{
                 return new OpenLayers.Style().createSymbolizer(feature);
             }
-
+        
         }
         var layer = new OpenLayers.Layer.Vector(layer_name, {styleMap: styleMap});
         layer.events.addEventType("featureselected");
         layer.events.addEventType("featureunselected");
         layer.events.on({
         	"featureselected": function(e) {
-        	    var id = e.feature.attributes.id;
-        		if(layer.select_function) layer.select_function(id, e.feature);
+        		if(layer.select_function) layer.select_function(e.feature.attributes.id, e.feature);
         	},
         	"featureunselected": function(e) {
-
+                if(layer.unselect_function) layer.unselect_function(e.feature.attributes.id, e.feature);
         	},
         });
         layer.setGeometries = function(geometries, key){
