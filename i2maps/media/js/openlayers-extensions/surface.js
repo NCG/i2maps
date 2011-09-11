@@ -35,9 +35,10 @@ OpenLayers.Layer.Surface = OpenLayers.Class(OpenLayers.Layer.Image, {
     initialize: function(name, options) {
         this.url = $('<canvas></canvas>')[0].toDataURL();
         this.colormap;
-        this.extent = new OpenLayers.Bounds.fromArray([-1120566.8344909, 6875052.0711326, -430187.59514285, 7262740.6785256]);
+        var irl = [-1120566.8344909, 6875052.0711326, -430187.59514285, 7262740.6785256];
+        this.extent = new OpenLayers.Bounds.fromArray(irl);
         this.maxExtent = this.extent;
-        this.size = new OpenLayers.Size(10, 10);
+        this.size = new OpenLayers.Size(200, 200);
         this.aspectRatio = (this.extent.getHeight() / this.size.h) / (this.extent.getWidth() / this.size.w);
         this.overlay_layer = false;
         OpenLayers.Layer.prototype.initialize.apply(this, [name, options]);
@@ -46,7 +47,7 @@ OpenLayers.Layer.Surface = OpenLayers.Class(OpenLayers.Layer.Image, {
         selected_point.surface = this;
         this.feature = {};
         this.manual_range_set = false;
-    },    
+    },
     
     pixelToGeo: function(y,x) {
         var lon2px = Math.abs(this.extent.getWidth()) / this.size.w;
@@ -133,7 +134,11 @@ OpenLayers.Layer.Surface = OpenLayers.Class(OpenLayers.Layer.Image, {
         this.maxExtent = this.extent = new OpenLayers.Bounds.fromArray(bbox);
         this.shape = shape;
         this.size = new OpenLayers.Size(this.shape[1], this.shape[0]);
-        this.aspectRatio = (this.extent.getHeight() / this.size.h) / (this.extent.getWidth() / this.size.w);
+        this.aspectRatio = Math.abs((this.extent.getHeight() / this.size.h) / (this.extent.getWidth() / this.size.w));
+        this.tile.clear();
+        this.tile.destroy();
+        this.tile = null;
+        this.redraw();
     },
     
     update: function(){
@@ -153,40 +158,6 @@ OpenLayers.Layer.Surface = OpenLayers.Class(OpenLayers.Layer.Image, {
         this.renderData();
         this.redraw();
         this.setupMouseEvents();
-    },
-    
-
-    setData: function(data) {
-        this.data = data.data;
-        var new_extent = new OpenLayers.Bounds.fromArray(data.bbox);
-        var redraw = !this.extent.equals(new_extent);
-        this.extent = new_extent;
-        this.maxExtent = this.extent;
-        this.shape = data.shape
-        // this.size = new OpenLayers.Size(this.data[0].length, this.data.length);
-        this.size = new OpenLayers.Size(this.shape[1], this.shape[0]);
-        var n = this.null_value;
-        // var flat = this.data.reduce(function(a,b){return a.concat(b)}).filter(function(a){return a != n});
-        var flat = this.data.filter(function(a){return a != n});
-        if(!this.manual_range_set)
-        {
-            this.max_value = flat.reduce(function(a,b){return Math.max(a,b)});
-            this.min_value = flat.reduce(function(a,b){return Math.min(a,b)});
-        }
-        this.aspectRatio = (this.extent.getHeight() / this.size.h) / (this.extent.getWidth() / this.size.w);
-        this.renderData();
-        this.tile.imgDiv.src = this.url;
-        if(redraw)
-        {
-            this.redraw();
-        }
-        this.setupMouseEvents();
-        this.drawSelectedPoint();
-        this.feature.attributes = {};
-        for(k in data.properties)
-        {
-            if(k != 'values') this.feature.attributes[k] = data.properties[k];
-        }
     },
     
     addTileMonitoringHooks: function(tile) {
@@ -240,35 +211,6 @@ OpenLayers.Layer.Surface = OpenLayers.Class(OpenLayers.Layer.Image, {
           ctx.putImageData(canvasData, 0, 0);
           this.url = canvas.toDataURL();
           this.tile.imgDiv.src = this.url;
-    },
-    
-    renderLegend: function() {
-        if(this.drawing) return;
-        this.drawing = true;
-        var canvas = $('<canvas></canvas>')[0];
-        canvas.width = 1;
-        canvas.height = 100;
-        var range = this.max_value - this.min_value;
-        var s = range / 100;
-        var v_y = Math.round((this.value - this.min_value) * (100.0/range))
-        var ctx = canvas.getContext('2d');
-        var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        for (var x = 0; x < canvas.width; x++)  {
-            for(var y=0; y < canvas.height; y++)
-            {
-                        var v = (y * s) + this.min_value;
-                        var idx = (x + ((canvas.height - y) * canvas.width)) * 4;
-                        color = this.colormap(v, this.min_value, this.max_value);
-                        if(y == v_y) color = [255,0,0];
-                        canvasData.data[idx + 0] = color[0]; // Red channel
-                        canvasData.data[idx + 1] = color[1]; // Green channel
-                        canvasData.data[idx + 2] = color[2]; // Blue channel
-                        canvasData.data[idx + 3] = 255; // Alpha channel
-            }
-        }
-        ctx.putImageData(canvasData, 0, 0);
-        this.legend_data_url = canvas.toDataURL();
-        this.drawing = false;
     },
     
     setupEvents: function() {
