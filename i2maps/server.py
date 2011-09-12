@@ -3,13 +3,18 @@ import i2maps
 import pico
 
 try:
-    from IPython import embed
+    import IPython
+    try:
+        embed = IPython.Shell.IPShellEmbed()
+    except:
+        embed = IPython.frontend.terminal.embed.InteractiveShellEmbed()
 except:
     def embed():
         print("IPython is required to run the interactive shell!")
-
+embed.private = True
 i2maps.projects_directory = None
 
+@pico.private
 def run():
     if i2maps.projects_directory:
         i2maps.modules_directory = i2maps.projects_directory + 'modules/'
