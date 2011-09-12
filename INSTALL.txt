@@ -1,0 +1,18 @@
+Dependencies:
+  Python 2.6+
+
+  Python Libraries
+  * Pico (see https://github.com/fergalwalsh/pico)
+  * Django
+
+  C Libraries
+  * GEOS
+  * GDAL 
+  * PROJ.4
+
+See https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/ for detailed instructions on how to install GEOS, GDAL, PROJ.4 on a variety of platforms.
+
+
+Recommended:
+* Numpy (used in i2maps.algorithms)
+* Psycopg2 (for connecting to a Postgres Database)
