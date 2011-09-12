@@ -1,6 +1,6 @@
 A framework for building dynamic spatial data driven web applications
 
-###Features
+#Features
 
 An integrated server & client framework
 
