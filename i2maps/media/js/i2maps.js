@@ -70,11 +70,53 @@ function load_i2maps(){
         return d.getFullYear() + '-' + m + '-' + day + ' ' + time;
     }
     
-    i2maps.Map = function(mapDiv, options){
+        i2maps.Map = function(mapDiv, options){
         var temp = i2maps.createMap(mapDiv, options);
+        
+        // Create a click control for handling single and double clicks.
+        // A user will register for these events as below
+        // map.click_function = function(lonlat.lon, lonlat.lat, e.xy.x, e.xy.y)
+        // map.dblclick_function = function(lonlat.lon, lonlat.lat, e.xy.x, e.xy.y)
+        OpenLayers.Control.Click = OpenLayers.Class
+        (
+            OpenLayers.Control,
+            {
+                defaultHandlerOptions:{'single': true, 'double': true, 'pixelTolerance': 0, 'stopSingle': false, 'stopDouble': false},
+                
+                initialize: function(options)
+                {
+                    this.handlerOptions = OpenLayers.Util.extend({}, this.defaultHandlerOptions);
+                    OpenLayers.Control.prototype.initialize.apply(this, arguments);
+                    this.handler = new OpenLayers.Handler.Click(this, {'click': this.click, 'dblclick': this.dblclick}, this.handlerOptions);
+                },
+                
+                // Click handlers are below. For each, expand out the e into its components lon, lat, x, y. 
+                // This is a much more useful interface.
+                
+                // Single click handler.
+                click: function(e)
+                {
+                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                    temp.click_function(lonlat.lon, lonlat.lat, e.xy.x, e.xy.y);
+                },
+                
+                // Double click (dblclick for short) handler.
+                dblclick: function(e)
+                {
+                    var lonlat = map.getLonLatFromViewPortPx(e.xy);
+                    temp.dblclick_function(lonlat.lon, lonlat.lat, e.xy.x, e.xy.y);
+                }
+            }
+        );
+        
+        // Create an instance of the control and activate it on the map.
+        var click = new OpenLayers.Control.Click();
+        temp.addControl(click);
+        click.activate();
+        
         return temp;
     }
-    
+     
     i2maps.createMap = function(mapDiv, options){
         var map_options = {
         	div: mapDiv,
