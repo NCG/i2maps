@@ -40,11 +40,24 @@ class Postgres(database.Database):
             self.connection.rollback()
             raise e
     
-    def modify(self, query, params=()):
+   def modify(self, query, params=()):
         try:
             cur = self.cursor
             cur.execute(query, params)
             self.connection.commit()
+            
+            # fetchone(): Fetch one row from the current result set. 
+            # If the result set was previously exhausted, 
+            # this returns None and moves to the next result set. 
+            # If there were no result sets, a ProgrammingError is raised.
+            try:
+                if cur.rowcount == 1:
+                    row = cur.fetchone()
+                    if row:
+                        return row[0]
+            except psycopg2.ProgrammingError:
+                pass
+            
         except Exception, e:
             self.connection.rollback()
             raise e
