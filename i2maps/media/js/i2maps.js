@@ -388,9 +388,10 @@ function load_i2maps(){
         if(this.listeners[event_name] == undefined) this.listeners[event_name] = [];
         this.listeners[event_name].push(func);
     };
-    i2maps.events.trigger = function(event_name, obj){
+    i2maps.events.trigger = function(event_name){
         if(this.listeners[event_name] != undefined){
-            this.listeners[event_name].forEach(function(x){x.call(null, obj)});
+            var parameters = [].slice.call(arguments, 1);
+            this.listeners[event_name].forEach(function(x){x.apply(null, parameters)});
         }
     };
     
