@@ -40,7 +40,7 @@ class Postgres(database.Database):
             self.connection.rollback()
             raise e
     
-   def modify(self, query, params=()):
+    def modify(self, query, params=()):
         try:
             cur = self.cursor
             cur.execute(query, params)
