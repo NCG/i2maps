@@ -1,6 +1,7 @@
 import sys
 import i2maps
 import pico
+import pico.server
 
 try:
     import IPython
@@ -31,12 +32,12 @@ def run():
         ('^/$', media_directory + 'index.html'),
     ]
     
-    pico.static_url_map = urls
+    pico.server.STATIC_URL_MAP = urls
     
     if len(sys.argv) > 1 and sys.argv[1] == 'shell':
         embed()
     else:
-        pico.main()
+        pico.server.main()
 
 if __name__ == '__main__':
     run()
