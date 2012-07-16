@@ -1,0 +1,142 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>i2maps &mdash; i2maps v1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="i2maps v1 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">i2maps v1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for i2maps</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">django.contrib.gis.geos</span> <span class="kn">as</span> <span class="nn">geos</span>
+<span class="kn">import</span> <span class="nn">django.contrib.gis.gdal</span> <span class="kn">as</span> <span class="nn">gdal</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span>
+
+<div class="viewcode-block" id="datetime_to_timestamp"><a class="viewcode-back" href="../api.html#i2maps.datetime_to_timestamp">[docs]</a><span class="k">def</span> <span class="nf">datetime_to_timestamp</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert datetime.datetime object to an int (number of seconds since the epoch).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">mktime</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">timetuple</span><span class="p">()))</span>
+</div>
+<div class="viewcode-block" id="datetime_to_datestring"><a class="viewcode-back" href="../api.html#i2maps.datetime_to_datestring">[docs]</a><span class="k">def</span> <span class="nf">datetime_to_datestring</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert datetime.datetime object to a datestring, &quot;YYYY-mm-dd HH:MM:SS&quot;.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">)[:</span><span class="mi">19</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="timestamp_to_datetime"><a class="viewcode-back" href="../api.html#i2maps.timestamp_to_datetime">[docs]</a><span class="k">def</span> <span class="nf">timestamp_to_datetime</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert an int to a datetime.datetime object.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="datestring_to_datetime"><a class="viewcode-back" href="../api.html#i2maps.datestring_to_datetime">[docs]</a><span class="k">def</span> <span class="nf">datestring_to_datetime</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a datestring, &quot;YYYY-mm-dd HH:MM:SS&quot;, to a datetime.datetime object.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="datestring_to_timestamp"><a class="viewcode-back" href="../api.html#i2maps.datestring_to_timestamp">[docs]</a><span class="k">def</span> <span class="nf">datestring_to_timestamp</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert a datestring, &quot;YYYY-mm-dd HH:MM:SS&quot;, to an int (number of seconds since the epoch).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime_to_timestamp</span><span class="p">(</span><span class="n">datestring_to_datetime</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="geoms_from_json"><a class="viewcode-back" href="../api.html#i2maps.geoms_from_json">[docs]</a><span class="k">def</span> <span class="nf">geoms_from_json</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&#39;read&#39;</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">key</span><span class="o">==</span><span class="bp">None</span> <span class="ow">and</span> <span class="s">&#39;geom&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">itervalues</span><span class="p">()</span><span class="o">.</span><span class="n">next</span><span class="p">():</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;geom&#39;</span>
+    <span class="k">if</span> <span class="n">key</span><span class="o">==</span><span class="bp">None</span> <span class="ow">and</span> <span class="s">&#39;geometry&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">itervalues</span><span class="p">()</span><span class="o">.</span><span class="n">next</span><span class="p">():</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s">&#39;geometry&#39;</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">geos</span><span class="o">.</span><span class="n">GEOSGeometry</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">key</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">geos</span><span class="o">.</span><span class="n">GEOSGeometry</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">d</span>
+</div>
+<div class="viewcode-block" id="geoms_from_shapefile"><a class="viewcode-back" href="../api.html#i2maps.geoms_from_shapefile">[docs]</a><span class="k">def</span> <span class="nf">geoms_from_shapefile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">DataSource</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">id_column</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">if</span> <span class="nb">id</span> <span class="k">else</span> <span class="n">f</span><span class="o">.</span><span class="n">fid</span>
+    <span class="n">geoms</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_column</span><span class="p">(</span><span class="n">f</span><span class="p">):</span> <span class="n">geos</span><span class="o">.</span><span class="n">GEOSGeometry</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">geom</span><span class="o">.</span><span class="n">wkt</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">geoms</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">i2maps v1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Fergal Walsh, Christian Kaiser, Alexei Pozdnoukhov, Cathal Coffey.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

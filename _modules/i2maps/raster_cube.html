@@ -1,0 +1,173 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>i2maps.raster_cube &mdash; i2maps v1 documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="i2maps v1 documentation" href="../../index.html" />
+    <link rel="up" title="i2maps" href="../i2maps.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">i2maps v1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../i2maps.html" accesskey="U">i2maps</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for i2maps.raster_cube</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">i2maps</span>
+<span class="kn">import</span> <span class="nn">spatial_array</span>
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">RasterCube</span><span class="p">(</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">a</span>
+    </div>
+<div class="viewcode-block" id="RasterCube"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube">[docs]</a><span class="k">class</span> <span class="nc">RasterCube</span><span class="p">():</span>
+    
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_spatial_array</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">envelope</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">input_spatial_array</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span> <span class="o">=</span> <span class="n">input_spatial_array</span>
+        <span class="k">elif</span> <span class="n">filename</span><span class="p">:</span> 
+            <span class="n">a</span> <span class="o">=</span> <span class="n">spatial_array</span><span class="o">.</span><span class="n">SpatialArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="n">envelope</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span> <span class="o">=</span> <span class="n">spatial_array</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&#39;times&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;times&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    
+<div class="viewcode-block" id="RasterCube.insert"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">i2maps</span><span class="o">.</span><span class="n">datetime_to_datestring</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">max_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;times&#39;</span><span class="p">]</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">times</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">times</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">times</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="n">max_length</span><span class="p">:</span>
+                <span class="n">oldest</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="n">oldest</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">times</span><span class="p">[</span><span class="n">oldest</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># find an unused index within the allowable range</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_length</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">times</span><span class="o">.</span><span class="n">values</span><span class="p">()][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">times</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">times</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="p">[:,:,</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">surface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;times&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">times</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">idx</span>
+        </div>
+<div class="viewcode-block" id="RasterCube.surface"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube.surface">[docs]</a>    <span class="k">def</span> <span class="nf">surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">i2maps</span><span class="o">.</span><span class="n">datetime_to_datestring</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">time</span><span class="p">:</span> <span class="n">time</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">time_key</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="n">times</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;times&#39;</span><span class="p">][</span><span class="n">time_key</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;properties&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;time&#39;</span><span class="p">:</span> <span class="n">time_key</span><span class="p">}</span>
+            <span class="n">surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="p">[:,:,</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">surface</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+    </div>
+<div class="viewcode-block" id="RasterCube.remove"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;times&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    </div>
+<div class="viewcode-block" id="RasterCube.timeline"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube.timeline">[docs]</a>    <span class="k">def</span> <span class="nf">timeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geo_x</span><span class="p">,</span> <span class="n">geo_y</span><span class="p">):</span>
+        <span class="n">py</span><span class="p">,</span> <span class="n">px</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">spatial_to_pixel</span><span class="p">((</span><span class="n">geo_y</span><span class="p">,</span> <span class="n">geo_x</span><span class="p">))</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="p">[</span><span class="n">py</span><span class="p">,</span><span class="n">px</span><span class="p">,:]</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;times&#39;</span><span class="p">]</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">times</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">times_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">values</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="nb">map</span><span class="p">(</span><span class="n">times</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">keys</span><span class="p">))))</span>
+        <span class="k">return</span> <span class="n">times_values</span>
+    </div>
+<div class="viewcode-block" id="RasterCube.times"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube.times">[docs]</a>    <span class="k">def</span> <span class="nf">times</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">ref</span><span class="p">[</span><span class="s">&#39;times&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    </div>
+<div class="viewcode-block" id="RasterCube.save"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="RasterCube.reload"><a class="viewcode-back" href="../../api.html#i2maps.raster_cube.RasterCube.reload">[docs]</a>    <span class="k">def</span> <span class="nf">reload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_array</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">i2maps v1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../i2maps.html" >i2maps</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Fergal Walsh, Christian Kaiser, Alexei Pozdnoukhov, Cathal Coffey.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

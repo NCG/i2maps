@@ -1,0 +1,555 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>i2maps Javascript API Documentation &mdash; i2maps v1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="i2maps v1 documentation" href="index.html" />
+    <link rel="prev" title="i2maps Python API Documentation" href="api.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="i2maps Python API Documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">i2maps v1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="i2maps-javascript-api-documentation">
+<h1>i2maps Javascript API Documentation<a class="headerlink" href="#i2maps-javascript-api-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="i2maps-map">
+<h2>i2maps.Map<a class="headerlink" href="#i2maps-map" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Map">
+<em class="property">class </em><tt class="descname">Map</tt><big>(</big><em>div_id</em><span class="optional">[</span>, <em>options</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Map" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create an OpenLayers map object with some extras.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>div_id</strong> (<em>string</em>) &#8211; The id of the placeholder div</li>
+<li><strong>options</strong> (<em>object</em>) &#8211; <p>an optional object of options</p>
+<p>The options object may include a baseLayers key mapped to
+an array of base layer identifiers. addBaseLayer will be called with
+each string included in this array.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="Map.addBaseLayer">
+<tt class="descclassname">Map.</tt><tt class="descname">addBaseLayer</tt><big>(</big><em>layer_name</em><big>)</big><a class="headerlink" href="#Map.addBaseLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a named base layer to the map.</p>
+<dl class="docutils">
+<dt>This is a convenience function, base layers can also be created normally</dt>
+<dd>as OpenLayers layers with isBaseLayer: True and added to the map with addLayer.</dd>
+</dl>
+<p>If you wish to use &#8220;Google&#8221; layers you must set a global variable
+GOOGLE_MAPS_API_KEY to the API key for your domain.</p>
+<p>The possible layers come from i2maps.baseLayerDefinitions.
+You may add other entries to this dictionary to add additional shortcuts.
+The &#8220;Open Street Map&#8221; layer is defined as follows:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">i2maps</span><span class="p">.</span><span class="nx">baseLayerDefinitions</span><span class="p">[</span><span class="s2">&quot;Open Street Map&quot;</span><span class="p">]</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">OpenLayers</span><span class="p">.</span><span class="nx">Layer</span><span class="p">.</span><span class="nx">OSM</span><span class="p">(</span><span class="s2">&quot;Open Street Map&quot;</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layer_name</strong> (<em>string</em>) &#8211; One of &#8220;Open Street Map&#8221; or &#8220;OSM&#8221;, &#8220;Google Streets&#8221;, &#8220;Google Satellite&#8221;, &#8220;Google Hybrid&#8221;, &#8220;Google Physical&#8221;, &#8220;No Base Layer&#8221;.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="i2maps-vectorlayer">
+<h2>i2maps.VectorLayer<a class="headerlink" href="#i2maps-vectorlayer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="VectorLayer">
+<em class="property">class </em><tt class="descname">VectorLayer</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#VectorLayer" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create an OpenLayers vector layer with some extras.
+Feature select events are automatically added to the layer.
+The style is set to be computed by calling the style_function.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the layer (shown in the layer switcher)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="VectorLayer.style_function">
+<tt class="descclassname">VectorLayer.</tt><tt class="descname">style_function</tt><big>(</big><em>id</em>, <em>selected</em><big>)</big><a class="headerlink" href="#VectorLayer.style_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called every time a vector is drawn on this layer.
+This function should be assigned such that it returns a dictionary
+of style options for the vector with the id given.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">layer</span><span class="p">.</span><span class="nx">style_function</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">selected</span><span class="p">){</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;stroke&#39;</span><span class="o">:</span> <span class="nx">selected</span> <span class="o">?</span> <span class="s1">&#39;#ff0000&#39;</span> <span class="o">:</span> <span class="s2">&quot;#000000&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;fillColor&#39;</span><span class="o">:</span> <span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;label&#39;</span><span class="o">:</span> <span class="nx">some_data</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span>
+            <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>string</em>) &#8211; the id of the vector to be styled</li>
+<li><strong>selected</strong> (<em>boolean</em>) &#8211; true if this vector is selected, false otherwise</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="VectorLayer.select_function">
+<tt class="descclassname">VectorLayer.</tt><tt class="descname">select_function</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#VectorLayer.select_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called when a vector is selected.
+This function should be assigned such that it does something appropriate
+when the vector with the given id is selected.
+It should not return anything.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">layer</span><span class="p">.</span><span class="nx">select_function</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Vector &quot;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot; was selected.&quot;</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>id</strong> (<em>string</em>) &#8211; the id of the vector that was selected</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="i2maps-rasterlayer">
+<h2>i2maps.RasterLayer<a class="headerlink" href="#i2maps-rasterlayer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="RasterLayer">
+<em class="property">class </em><tt class="descname">RasterLayer</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#RasterLayer" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create a canvas based image layer.
+The layer is designed to be drawn by assigning a color to each pixel.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the layer (shown in the layer switcher)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="RasterLayer.setGeometry">
+<tt class="descclassname">RasterLayer.</tt><tt class="descname">setGeometry</tt><big>(</big><em>bbox</em>, <em>shape</em><big>)</big><a class="headerlink" href="#RasterLayer.setGeometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the bounding box and shape of this layer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bbox</strong> (<em>array</em>) &#8211; [left, bottom, right, top]</li>
+<li><strong>shape</strong> (<em>array</em>) &#8211; [height, width]</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="RasterLayer.draw_function">
+<tt class="descclassname">RasterLayer.</tt><tt class="descname">draw_function</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#RasterLayer.draw_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called for each pixel every time this layer is drawn.
+This function should be assigned such that it returns a color
+for the pixel at the given x,y coordinate.</p>
+<p>The return value should be an array of [R, G, B, A].</p>
+<p>Typically this function is used with a colormap and some 2d data array.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">cm</span> <span class="o">=</span> <span class="nx">i2maps</span><span class="p">.</span><span class="nx">colormap</span><span class="p">.</span><span class="nx">jet</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+
+<span class="nx">layer</span><span class="p">.</span><span class="nx">draw_function</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">y</span><span class="p">][</span><span class="nx">x</span><span class="p">];</span>
+    <span class="k">return</span> <span class="nx">cm</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) &#8211; the pixel coordinate on the horizontal axis</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; the pixel coordinate on the vertical axis</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="RasterLayer.select_function">
+<tt class="descclassname">RasterLayer.</tt><tt class="descname">select_function</tt><big>(</big><em>x</em>, <em>y</em>, <em>lat</em>, <em>lon</em><big>)</big><a class="headerlink" href="#RasterLayer.select_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called when a pixel is selected.
+This function should be assigned such that it does something appropriate
+when the pixel at the given x, y is selected.
+It should not return anything.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">layer</span><span class="p">.</span><span class="nx">select_function</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">lon</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Pixel &quot;</span> <span class="o">+</span> <span class="nx">x</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">+</span> <span class="s2">&quot; was selected.&quot;</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<em>int</em>) &#8211; the pixel coordinate on the horizontal axis</li>
+<li><strong>y</strong> (<em>int</em>) &#8211; the pixel coordinate on the vertical axis</li>
+<li><strong>lat</strong> (<em>float</em>) &#8211; the geographic latitude corresponding to the selected pixel</li>
+<li><strong>lon</strong> (<em>float</em>) &#8211; the geographic longitude corresponding to the selected pixel</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="i2maps-timeline">
+<h2>i2maps.Timeline<a class="headerlink" href="#i2maps-timeline" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Timeline">
+<em class="property">class </em><tt class="descname">Timeline</tt><big>(</big><em>div_id</em><span class="optional">[</span>, <em>options</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#Timeline" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create a timeline control.
+The timeline displays time referenced numeric data on a line chart.
+The timeline may have multiple layers which can be updated independently.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>div_id</strong> (<em>string</em>) &#8211; The id of the placeholder div</li>
+<li><strong>options</strong> (<em>object</em>) &#8211; an optional object of options</li>
+<li><strong>options.timespan</strong> (<em>string</em>) &#8211; a timespan in natural language. e.g. &#8220;1 week&#8221; or &#8220;10 days&#8221;. The timespan is the length of time that should be shown on the timeline at the default zoom level.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="timeline.update">
+<tt class="descclassname">timeline.</tt><tt class="descname">update</tt><big>(</big><em>data</em>, <em>layer</em><big>)</big><a class="headerlink" href="#timeline.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the timeline with the data provided.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">timeline</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">i2maps</span><span class="p">.</span><span class="nx">Timeline</span><span class="p">(</span><span class="s1">&#39;timeline&#39;</span><span class="p">,</span> <span class="s2">&quot;2 days&quot;</span><span class="p">);</span>
+<span class="nx">timeline</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+  <span class="s1">&#39;2011-01-01 00:00&#39;</span><span class="o">:</span> <span class="mf">5.0</span><span class="p">,</span>
+  <span class="s1">&#39;2011-01-01 12:00&#39;</span><span class="o">:</span> <span class="mf">10.0</span><span class="p">,</span>
+  <span class="s1">&#39;2011-01-01 18:00&#39;</span><span class="o">:</span> <span class="mf">20.0</span><span class="p">,</span>
+  <span class="s1">&#39;2011-01-02 00:00&#39;</span><span class="o">:</span> <span class="mf">15.0</span><span class="p">,</span>
+  <span class="s1">&#39;2011-01-02 12:00&#39;</span><span class="o">:</span> <span class="mf">12.0</span>
+<span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>object</em>) &#8211; a mapping of timestamps to values</li>
+<li><strong>layer</strong> (<em>int</em>) &#8211; the timeline layer that should be updated</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="timeline.onChangeTime">
+<tt class="descclassname">timeline.</tt><tt class="descname">onChangeTime</tt><big>(</big><em>time</em><big>)</big><a class="headerlink" href="#timeline.onChangeTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called when the time is changed by selecting a timepoint.
+By default this function triggers a &#8220;timechange&#8221; event.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">timeline</span><span class="p">.</span><span class="nx">onChangeTime</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">time</span><span class="p">){</span>
+  <span class="nx">i2maps</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">&quot;timechange&quot;</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time</strong> (<em>string</em>) &#8211; the current timestring</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="i2maps-colormap">
+<h2>i2maps.colormap<a class="headerlink" href="#i2maps-colormap" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="colormap.jet">
+<tt class="descclassname">colormap.</tt><tt class="descname">jet</tt><big>(</big><em>min</em>, <em>max</em><big>)</big><a class="headerlink" href="#colormap.jet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Jet colormap function with the given min, max.</p>
+<p>Returns a colormap_function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>min</strong> (<em>int</em>) &#8211; the minimum value of this colormap</li>
+<li><strong>max</strong> (<em>int</em>) &#8211; the maximum value of this colormap</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="colormap.hot">
+<tt class="descclassname">colormap.</tt><tt class="descname">hot</tt><big>(</big><em>min</em>, <em>max</em><big>)</big><a class="headerlink" href="#colormap.hot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Hot colormap function with the given min, max.</p>
+<p>Returns a colormap_function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>min</strong> (<em>int</em>) &#8211; the minimum value of this colormap</li>
+<li><strong>max</strong> (<em>int</em>) &#8211; the maximum value of this colormap</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="colormap.grays">
+<tt class="descclassname">colormap.</tt><tt class="descname">grays</tt><big>(</big><em>min</em>, <em>max</em><big>)</big><a class="headerlink" href="#colormap.grays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Grays colormap function with the given min, max.</p>
+<p>Returns a colormap_function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>min</strong> (<em>int</em>) &#8211; the minimum value of this colormap</li>
+<li><strong>max</strong> (<em>int</em>) &#8211; the maximum value of this colormap</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="colormap_function">
+<tt class="descname">colormap_function</tt><big>(</big><em>value</em><span class="optional">[</span>, <em>default</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#colormap_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the color for the specified value.
+If the value is outside the min,max range, return default</p>
+<p>The color is an array, with a .html() function which converts
+it to the html hex string representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>value</strong> (<em>float</em>) &#8211; value</li>
+<li><strong>default</strong> (<em>array</em>) &#8211; the default color. Defaults to [0,0,0,0] (fully transparent black)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="i2maps-infobox">
+<h2>i2maps.InfoBox<a class="headerlink" href="#i2maps-infobox" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="InfoBox">
+<em class="property">class </em><tt class="descname">InfoBox</tt><big>(</big><em>div_id</em>, <em>title</em><big>)</big><a class="headerlink" href="#InfoBox" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Create an Information Box control.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>div_id</strong> (<em>string</em>) &#8211; The id of the placeholder div</li>
+<li><strong>title</strong> (<em>object</em>) &#8211; the title to display in the box</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="infobox.update">
+<tt class="descclassname">infobox.</tt><tt class="descname">update</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#infobox.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the info box with the contents of obj.</p>
+<p>If obj is a String, the innerHTML of the info box will literally be obj.
+If obj is an object/dictionary, the key-value pairs will be
+formatted as a table inside the info box.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">infobox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">i2maps</span><span class="p">.</span><span class="nx">InfoBox</span><span class="p">(</span><span class="s1">&#39;info_box&#39;</span><span class="p">,</span> <span class="s1">&#39;Information&#39;</span><span class="p">);</span>
+<span class="nx">infobox</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
+  <span class="s1">&#39;Name&#39;</span><span class="o">:</span> <span class="s1">&#39;Something&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;Value&#39;</span><span class="o">:</span> <span class="mf">42.0</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Arguments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> (<em>object/string</em>) &#8211; the object to use as the contents of this info box</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">i2maps Javascript API Documentation</a><ul>
+<li><a class="reference internal" href="#i2maps-map">i2maps.Map</a></li>
+<li><a class="reference internal" href="#i2maps-vectorlayer">i2maps.VectorLayer</a></li>
+<li><a class="reference internal" href="#i2maps-rasterlayer">i2maps.RasterLayer</a></li>
+<li><a class="reference internal" href="#i2maps-timeline">i2maps.Timeline</a></li>
+<li><a class="reference internal" href="#i2maps-colormap">i2maps.colormap</a></li>
+<li><a class="reference internal" href="#i2maps-infobox">i2maps.InfoBox</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="previous chapter">i2maps Python API Documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/jsapi.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="i2maps Python API Documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">i2maps v1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Fergal Walsh, Christian Kaiser, Alexei Pozdnoukhov, Cathal Coffey.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>i2maps Python API Documentation &mdash; i2maps v1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="i2maps v1 documentation" href="index.html" />
+    <link rel="next" title="i2maps Javascript API Documentation" href="jsapi.html" />
+    <link rel="prev" title="Welcome to i2maps’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jsapi.html" title="i2maps Javascript API Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to i2maps’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">i2maps v1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="i2maps-python-api-documentation">
+<h1>i2maps Python API Documentation<a class="headerlink" href="#i2maps-python-api-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="i2maps-db-database">
+<h2>i2maps.db.Database<a class="headerlink" href="#i2maps-db-database" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="i2maps.db.database.Database">
+<em class="property">class </em><tt class="descclassname">i2maps.db.database.</tt><tt class="descname">Database</tt><a class="reference internal" href="_modules/i2maps/db/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.db.database.Database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="i2maps.db.database.Database.columns">
+<tt class="descname">columns</tt><big>(</big><em>table</em><big>)</big><a class="reference internal" href="_modules/i2maps/db/database.html#Database.columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.db.database.Database.columns" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.database.Database.dict_query">
+<tt class="descname">dict_query</tt><big>(</big><em>query</em>, <em>params=()</em><big>)</big><a class="reference internal" href="_modules/i2maps/db/database.html#Database.dict_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.db.database.Database.dict_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.database.Database.has_table">
+<tt class="descname">has_table</tt><big>(</big><em>table</em><big>)</big><a class="reference internal" href="_modules/i2maps/db/database.html#Database.has_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.db.database.Database.has_table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.database.Database.modify">
+<tt class="descname">modify</tt><big>(</big><em>query</em>, <em>params=()</em><big>)</big><a class="reference internal" href="_modules/i2maps/db/database.html#Database.modify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.db.database.Database.modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.database.Database.query">
+<tt class="descname">query</tt><big>(</big><em>query</em>, <em>params=()</em><big>)</big><a class="reference internal" href="_modules/i2maps/db/database.html#Database.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.db.database.Database.query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="i2maps-db-sqlite">
+<h2>i2maps.db.Sqlite<a class="headerlink" href="#i2maps-db-sqlite" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="i2maps.db.Sqlite">
+<em class="property">class </em><tt class="descclassname">i2maps.db.</tt><tt class="descname">Sqlite</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#i2maps.db.Sqlite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#i2maps.db.database.Database" title="i2maps.db.database.Database"><tt class="xref py py-class docutils literal"><span class="pre">i2maps.db.database.Database</span></tt></a></p>
+<dl class="method">
+<dt id="i2maps.db.Sqlite.columns">
+<tt class="descname">columns</tt><big>(</big><em>table</em><big>)</big><a class="headerlink" href="#i2maps.db.Sqlite.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary containing the column names as keys and the
+types as values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.Sqlite.dict_query">
+<tt class="descname">dict_query</tt><big>(</big><em>query</em>, <em>params=()</em><big>)</big><a class="headerlink" href="#i2maps.db.Sqlite.dict_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.Sqlite.has_table">
+<tt class="descname">has_table</tt><big>(</big><em>table</em><big>)</big><a class="headerlink" href="#i2maps.db.Sqlite.has_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if this SQLite database has a table with the provided
+name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.Sqlite.modify">
+<tt class="descname">modify</tt><big>(</big><em>query</em>, <em>params=()</em><big>)</big><a class="headerlink" href="#i2maps.db.Sqlite.modify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.db.Sqlite.query">
+<tt class="descname">query</tt><big>(</big><em>query</em>, <em>params=()</em><big>)</big><a class="headerlink" href="#i2maps.db.Sqlite.query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="i2maps-db-postgres">
+<h2>i2maps.db.Postgres<a class="headerlink" href="#i2maps-db-postgres" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-i2maps.spatial_array">
+<span id="i2maps-spatial-array"></span><h2>i2maps.spatial_array<a class="headerlink" href="#module-i2maps.spatial_array" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="i2maps.spatial_array.SpatialArray">
+<em class="property">class </em><tt class="descclassname">i2maps.spatial_array.</tt><tt class="descname">SpatialArray</tt><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">numpy.ndarray</span></tt></p>
+<dl class="attribute">
+<dt id="i2maps.spatial_array.SpatialArray.bbox">
+<tt class="descname">bbox</tt><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.bbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.spatial_array.SpatialArray.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.spatial_array.SpatialArray.iteritems">
+<tt class="descname">iteritems</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.iteritems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.iteritems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="i2maps.spatial_array.SpatialArray.json">
+<tt class="descname">json</tt><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="i2maps.spatial_array.SpatialArray.ndims">
+<tt class="descname">ndims</tt><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.ndims"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.ndims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of dimensions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="i2maps.spatial_array.SpatialArray.nodata">
+<tt class="descname">nodata</tt><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.nodata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.nodata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.spatial_array.SpatialArray.pixel_to_spatial">
+<tt class="descname">pixel_to_spatial</tt><big>(</big><em>px</em><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.pixel_to_spatial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.pixel_to_spatial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts pixel coordinates to spatialgraphic space coordinates.
+Returns the coordinate at the centre of the pixel.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="i2maps.spatial_array.SpatialArray.reload">
+<tt class="descname">reload</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.reload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.reload" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="i2maps.spatial_array.SpatialArray.resolution">
+<tt class="descname">resolution</tt><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.resolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.resolution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.spatial_array.SpatialArray.save">
+<tt class="descname">save</tt><big>(</big><em>filename=None</em><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="i2maps.spatial_array.SpatialArray.size">
+<tt class="descname">size</tt><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The size of the raster in real world coordinates for each dimension.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="i2maps.spatial_array.SpatialArray.spatial_to_pixel">
+<tt class="descname">spatial_to_pixel</tt><big>(</big><em>spatial</em><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#SpatialArray.spatial_to_pixel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.SpatialArray.spatial_to_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts real-world coordinates to pixel coordinates.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="i2maps.spatial_array.load">
+<tt class="descclassname">i2maps.spatial_array.</tt><tt class="descname">load</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="i2maps.spatial_array.save">
+<tt class="descclassname">i2maps.spatial_array.</tt><tt class="descname">save</tt><big>(</big><em>filename</em>, <em>a</em><big>)</big><a class="reference internal" href="_modules/i2maps/spatial_array.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.spatial_array.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-i2maps.raster_cube">
+<span id="i2maps-raster-cube"></span><h2>i2maps.raster_cube<a class="headerlink" href="#module-i2maps.raster_cube" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="i2maps.raster_cube.RasterCube">
+<em class="property">class </em><tt class="descclassname">i2maps.raster_cube.</tt><tt class="descname">RasterCube</tt><big>(</big><em>input_spatial_array=None</em>, <em>filename=None</em>, <em>shape=None</em>, <em>envelope=None</em><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="i2maps.raster_cube.RasterCube.insert">
+<tt class="descname">insert</tt><big>(</big><em>surface</em>, <em>time</em><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube.insert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.raster_cube.RasterCube.reload">
+<tt class="descname">reload</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube.reload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube.reload" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.raster_cube.RasterCube.remove">
+<tt class="descname">remove</tt><big>(</big><em>time</em><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube.remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.raster_cube.RasterCube.save">
+<tt class="descname">save</tt><big>(</big><em>filename=None</em><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.raster_cube.RasterCube.surface">
+<tt class="descname">surface</tt><big>(</big><em>time=None</em><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube.surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube.surface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.raster_cube.RasterCube.timeline">
+<tt class="descname">timeline</tt><big>(</big><em>geo_x</em>, <em>geo_y</em><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube.timeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube.timeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="i2maps.raster_cube.RasterCube.times">
+<tt class="descname">times</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#RasterCube.times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.RasterCube.times" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="i2maps.raster_cube.load">
+<tt class="descclassname">i2maps.raster_cube.</tt><tt class="descname">load</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/i2maps/raster_cube.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.raster_cube.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-i2maps">
+<span id="i2maps"></span><h2>i2maps<a class="headerlink" href="#module-i2maps" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="i2maps.datestring_to_datetime">
+<tt class="descclassname">i2maps.</tt><tt class="descname">datestring_to_datetime</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="_modules/i2maps.html#datestring_to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.datestring_to_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a datestring, &#8220;YYYY-mm-dd HH:MM:SS&#8221;, to a datetime.datetime object.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="i2maps.datestring_to_timestamp">
+<tt class="descclassname">i2maps.</tt><tt class="descname">datestring_to_timestamp</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="_modules/i2maps.html#datestring_to_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.datestring_to_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a datestring, &#8220;YYYY-mm-dd HH:MM:SS&#8221;, to an int (number of seconds since the epoch).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="i2maps.datetime_to_datestring">
+<tt class="descclassname">i2maps.</tt><tt class="descname">datetime_to_datestring</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="_modules/i2maps.html#datetime_to_datestring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.datetime_to_datestring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert datetime.datetime object to a datestring, &#8220;YYYY-mm-dd HH:MM:SS&#8221;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="i2maps.datetime_to_timestamp">
+<tt class="descclassname">i2maps.</tt><tt class="descname">datetime_to_timestamp</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="_modules/i2maps.html#datetime_to_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.datetime_to_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert datetime.datetime object to an int (number of seconds since the epoch).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="i2maps.geoms_from_json">
+<tt class="descclassname">i2maps.</tt><tt class="descname">geoms_from_json</tt><big>(</big><em>f</em>, <em>key=None</em><big>)</big><a class="reference internal" href="_modules/i2maps.html#geoms_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.geoms_from_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="i2maps.geoms_from_shapefile">
+<tt class="descclassname">i2maps.</tt><tt class="descname">geoms_from_shapefile</tt><big>(</big><em>filename</em>, <em>id=None</em><big>)</big><a class="reference internal" href="_modules/i2maps.html#geoms_from_shapefile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.geoms_from_shapefile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="i2maps.timestamp_to_datetime">
+<tt class="descclassname">i2maps.</tt><tt class="descname">timestamp_to_datetime</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="_modules/i2maps.html#timestamp_to_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#i2maps.timestamp_to_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an int to a datetime.datetime object.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">i2maps Python API Documentation</a><ul>
+<li><a class="reference internal" href="#i2maps-db-database">i2maps.db.Database</a></li>
+<li><a class="reference internal" href="#i2maps-db-sqlite">i2maps.db.Sqlite</a></li>
+<li><a class="reference internal" href="#i2maps-db-postgres">i2maps.db.Postgres</a></li>
+<li><a class="reference internal" href="#module-i2maps.spatial_array">i2maps.spatial_array</a></li>
+<li><a class="reference internal" href="#module-i2maps.raster_cube">i2maps.raster_cube</a></li>
+<li><a class="reference internal" href="#module-i2maps">i2maps</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to i2maps&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="jsapi.html"
+                        title="next chapter">i2maps Javascript API Documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="jsapi.html" title="i2maps Javascript API Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to i2maps’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">i2maps v1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Fergal Walsh, Christian Kaiser, Alexei Pozdnoukhov, Cathal Coffey.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
