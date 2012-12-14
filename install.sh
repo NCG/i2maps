@@ -7,7 +7,7 @@ unzip master.zip
 cd pico-master
 sudo python setup.py install
 cd ..
-rm -r -f pico-master
+sudo rm -r -f pico-master
 rm master.zip
 echo "Installing python setup tools"
 sudo apt-get install python-setuptools
@@ -32,7 +32,7 @@ sudo ./configure
 sudo make
 sudo make install
 cd ..
-rm -r -f proj-4.8.0*
+sudo rm -r -f proj-4.8.0*
 echo "Installing Numpy"
 sudo apt-get install python-numpy
 echo "Installing Psycopg2"
