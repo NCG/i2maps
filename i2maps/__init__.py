@@ -47,5 +47,10 @@ def geoms_from_shapefile(filename, id=None):
     ds = gdal.DataSource(filename)
     layer = ds[0]
     id_column = lambda f: f.get(id) if id else f.fid
-    geoms = {id_column(f): geos.GEOSGeometry(f.geom.wkt) for f in layer}
+    geoms = {}
+    for f in layer:
+        try:
+            geoms[id_column(f)] = geos.GEOSGeometry(f.geom.wkt)
+        except Exception, e:
+            print e
     return geoms
