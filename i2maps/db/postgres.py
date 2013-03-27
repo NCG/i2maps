@@ -26,7 +26,7 @@ class Postgres(database.Database):
             try:
                 cur = self.query("select st_point(1.0, 1.0)")
                 geom_oid = cur.description[0][1]
-                convertor = psycopg2.extensions.new_type((geom_oid,), "GEOMETRY", lambda v, c: geos.GEOSGeometry(v))
+                convertor = psycopg2.extensions.new_type((geom_oid,), "GEOMETRY", lambda v, c: geos.GEOSGeometry(v) if v is not None else v)
                 psycopg2.extensions.register_type(convertor)
             except Exception, e:
                 print("Warning: This database does not seem to have the PostGIS functions installed")
